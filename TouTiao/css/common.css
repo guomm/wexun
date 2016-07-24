@@ -1,0 +1,229 @@
+.header {
+	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .12);
+}
+
+.logo-link {
+	line-height: 58px;
+	height: 58px;
+}
+
+.header-text {
+	padding-top: 14px;
+}
+
+.news-item {
+	padding: 15px 15px 15px 0;
+	border-bottom: 1px solid #e8e8e8;
+	display: block;
+}
+
+.news-item a {
+	color: #333;
+}
+
+.news-item a:hover {
+	text-decoration: none;
+	color: #333;
+}
+
+.news-item a:active {
+	text-decoration: none;
+	color: #333;
+}
+
+.news-item:last-child {
+	border-bottom: none;
+}
+
+.news-item .feedimg {
+	width: 132px;
+	height: 86px;
+	border: 1px solid #e8e8e8;
+	margin-right: 15px;
+}
+
+.news-item .title_box {
+	margin-top: 0;
+	font-weight: 700;
+	font-size: 18px;
+}
+
+.news-item .abstract {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	margin-bottom: 6px;
+	margin-top: 2px;
+}
+
+.news-item a.assert_link {
+	color: #777;
+}
+
+.news-item a.assert_link:hover {
+	color: #406599;
+}
+
+.image-list {
+	margin-bottom: 6px;
+	margin-top: 2px;
+}
+
+.image-list a {
+	float: left;
+	display: block;
+	width: 33.33%;
+	padding-right:7px;
+}
+
+.image-list a .night-image {
+	/*这是一个很巧妙的让容器保持等比例大小的方法*/
+	padding-top: 55.67%;
+	background-repeat: no-repeat;
+	background-size: cover;
+}
+
+.category {
+	padding-top: 20px;
+	font-size: 16px;
+}
+
+.category li {
+	margin-bottom: 20px;
+}
+.category img {
+	margin-right: 10px;
+}
+.category li a {
+	padding: 10px 25px;
+	border-radius: 20px;
+	color: #333;
+	text-decoration: none;
+}
+
+.category li a:hover {
+	background-color: rgba(0, 0, 0, .1);
+	color: #333;
+}
+.bg-click{
+	background: rgba(0, 0, 0, .1);
+}
+@media ( max-width : 767px) {
+	.category {
+		overflow: hidden;
+	}
+	.category li {
+		float: left;
+	}
+}
+
+.login-form {
+	margin-top: 60px;
+}
+
+.radio-type {
+	margin-left: 20px;
+}
+
+.checkbox-type {
+	margin-left: 20px;
+}
+
+.verify-img {
+	width: 100px;
+	height: 40px;
+}
+
+.verify-text {
+	margin-top: 10px;
+}
+
+.header-text-reg {
+	text-align: center;
+}
+
+.header-text-reg a img{
+	margin-bottom:10px;
+}
+.header-text-reg label {
+	width: 100%;
+	height: 58px;
+	line-height: 58px;
+	font-size: 30px;
+	padding-top: 5px;
+}
+
+.header-reg {
+	width: 100%;
+	height: 60px;
+	line-height: 80px;
+	box-shadow: 0 1px 4px 0 rgba(0, 0, 0, .12);
+}
+
+label {
+	margin: 0;
+	font-weight: normal;
+}
+
+.detail_label {
+	margin: 10px 10px 10px 0px;
+}
+
+.agency {
+	height: 30px;
+	line-height: 30px;
+	margin-bottom: 10px;
+	font-size: 16px;
+	color: #9e9e9e;
+}
+
+.recom {
+	text-align:center;
+	margin-top: 30px;
+}
+
+.recom p {
+	margin-left: 16px;
+}
+
+.recom-but {
+	width: 60px;
+	height: 50px;
+}
+
+.report {
+	position: absolute;
+	left: 90%;
+}
+
+.bounday {
+	background: #9e9e9e;
+	height: 3px;
+	width: 100%;
+	margin: 15px 15px 15px 0px;
+}
+
+.bottom {
+	margin: 15px 15px 15px 0px;
+}
+
+.bottom .storage {
+	left: 92%;
+	position: absolute;
+}
+
+.content {
+	left: 10%;
+	width: 80%;
+}
+
+.ad {
+	width: 200px;
+	height: 150px;
+}
+
+.cd-title label{
+	font-size:30px;
+}
