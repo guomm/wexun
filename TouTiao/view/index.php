@@ -16,6 +16,20 @@ function setTure(){
 	mark = true; 
 } 
 
+function transferTime(time){
+	var returnVal;
+	var timeSpan=((new Date().getTime())-(new Date(time).getTime()))/1000;
+	if(timeSpan<=60){
+		returnVal="刚刚";
+	}else if(timeSpan<=3600){
+		returnVal=parseInt(timeSpan/60)+"分钟前";
+	}else if(timeSpan<=21600){
+		returnVal=parseInt(timeSpan/3600)+"小时前";
+	}else{
+		returnVal=time;
+	}
+	return returnVal;
+}
 $.ajax({
 	url: "../room.php",  
 	data: {
@@ -28,7 +42,8 @@ $.ajax({
 		//alert(data);
 		var vals="";
 		for(var i=0;i<data.length;i++){
-			console.log(data[i]);
+			//console.log(date('Y-m-d H:i:s')-data[i].news_time);
+			console.log(data[i].news_time);
 			if(data[i].news_img_num==0){
 				vals+=loadDataNoPic(data[i]);
 			}else if(data[i].news_img_num==1){
@@ -46,31 +61,31 @@ $.ajax({
 });
 
 function loadDataNoPic(data){
-	return "<div class='clearfix news-item '><div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"'>"+data.news_title+"</a></div><div class='abstract'>"+
-			"<a href='newsDetail.php?news_id="+data.news_id+"'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
-			" <span class='text-muted'>"+data.news_time+"</span></div></div></div>";
+	return "<div class='clearfix news-item '><div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
+			"<a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
+			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
 }
 
 function loadDataOnePic(data){
-	return "<div class='clearfix news-item '><div class='pull-left'><a href='newsDetail.php?news_id="+data.news_id+"'><img class='feedimg' src='"+data.news_imgs+"' alt='图片'>" +
-			"</a></div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"'>"+data.news_title+"</a></div><div class='abstract'>"+
-			"<a href='newsDetail.php?news_id="+data.news_id+"'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
-			" <span class='text-muted'>"+data.news_time+"</span></div></div></div>";
+	return "<div class='clearfix news-item '><div class='pull-left'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'><img class='feedimg' src='"+data.news_imgs+"' alt='图片'>" +
+			"</a></div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
+			"<a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
+			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
 }
 function loadDataThreePic(data){
 	var imgs = data.news_imgs.split(';');
-	return "<div class='clearfix news-item '><div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"'>"+data.news_title+"</a></div><div class='image-list clearfix'>"+
-					"<a href='newsDetail.php?news_id="+data.news_id+"'>"+
+	return "<div class='clearfix news-item '><div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='image-list clearfix'>"+
+					"<a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
 						"<div class='night-image'"+
 							"style='background-image: url("+imgs[0]+")'></div>"+
-					"</a> <a href='newsDetail.php?news_id="+data.news_id+"'>"+
+					"</a> <a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
 						"<div class='night-image'"+
 							"style='background-image: url("+imgs[1]+")'></div>"+
-					"</a> <a href='newsDetail.php?news_id="+data.news_id+"'>"+
+					"</a> <a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
 						"<div class='night-image'"+
 							"style='background-image: url("+imgs[2]+")'></div>"+
 					"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
-			" <span class='text-muted'>"+data.news_time+"</span></div></div></div>";
+			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
 }
 
 $(window).scroll(function() {

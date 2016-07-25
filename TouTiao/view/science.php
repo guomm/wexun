@@ -48,27 +48,27 @@ $.ajax({
 });
 
 function loadDataNoPic(data){
-	return "<div class='clearfix news-item '><div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"'>"+data.news_title+"</a></div><div class='abstract'>"+
-			"<a href='newsDetail.php?news_id="+data.news_id+"'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
+	return "<div class='clearfix news-item '><div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=1'>"+data.news_title+"</a></div><div class='abstract'>"+
+			"<a href='newsDetail.php?news_id="+data.news_id+"&label_type=1'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
 			" <span class='text-muted'>"+data.news_time+"</span></div></div></div>";
 }
 
 function loadDataOnePic(data){
-	return "<div class='clearfix news-item '><div class='pull-left'><a href='newsDetail.php?news_id="+data.news_id+"'><img class='feedimg' src='"+data.news_imgs+"' alt='图片'>" +
-			"</a></div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"'>"+data.news_title+"</a></div><div class='abstract'>"+
-			"<a href='newsDetail.php?news_id="+data.news_id+"'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
+	return "<div class='clearfix news-item '><div class='pull-left'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=1'><img class='feedimg' src='"+data.news_imgs+"' alt='图片'>" +
+			"</a></div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=1'>"+data.news_title+"</a></div><div class='abstract'>"+
+			"<a href='newsDetail.php?news_id="+data.news_id+"&label_type=1'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
 			" <span class='text-muted'>"+data.news_time+"</span></div></div></div>";
 }
 function loadDataThreePic(data){
 	var imgs = data.news_imgs.split(';');
-	return "<div class='clearfix news-item '><div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"'>"+data.news_title+"</a></div><div class='image-list clearfix'>"+
-					"<a href='newsDetail.php?news_id="+data.news_id+"'>"+
+	return "<div class='clearfix news-item '><div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=1'>"+data.news_title+"</a></div><div class='image-list clearfix'>"+
+					"<a href='newsDetail.php?news_id="+data.news_id+"&label_type=1'>"+
 						"<div class='night-image'"+
 							"style='background-image: url("+imgs[0]+")'></div>"+
-					"</a> <a href='newsDetail.php?news_id="+data.news_id+"'>"+
+					"</a> <a href='newsDetail.php?news_id="+data.news_id+"&label_type=1'>"+
 						"<div class='night-image'"+
 							"style='background-image: url("+imgs[1]+")'></div>"+
-					"</a> <a href='newsDetail.php?news_id="+data.news_id+"'>"+
+					"</a> <a href='newsDetail.php?news_id="+data.news_id+"&label_type=1'>"+
 						"<div class='night-image'"+
 							"style='background-image: url("+imgs[2]+")'></div>"+
 					"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+

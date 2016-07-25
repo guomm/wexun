@@ -42,11 +42,42 @@ switch ($type) {
 		$labelName=$_POST ["labelName"];
 		$newsController->getNewsByLabel($labelId,$num,$labelName);
 		break;
+	case "getDetailNews" :
+		$news_id = $_POST ["news_id"];
+		$newsController->getDetailNews($news_id);
+		break;
+	case "recommendNews" :
+		$news_id = $_POST ["news_id"];
+		$newsController->recommendNews($news_id);
+		break;
+	case "shareNews" :
+		$news_id = $_POST ["news_id"];
+		$newsController->shareNews($news_id);
+		break;
+	case "storageNews" :
+		$news_id = $_POST ["news_id"];
+		$newsController->storageNews($news_id);
+		break;
+	case "removeStorageNews" :
+		$news_id = $_POST ["news_id"];
+		$newsController->removeStorageNews($news_id);
+		break;
+	case "removeRecommendNews" :
+		//$news_id = $_POST ["news_id"];
+		//$newsController->removeStorageNews($news_id);
+		echo 1;
+		break;
+	case "reportNews" :
+		$news_id = $_POST ["news_id"];
+		$describe = $_POST ["describe"];
+		$newsController->reportNews($news_id,$describe);
+		echo 1;
+		break;
 }
 
 //test mysql
 //add data 
-//createData();
+//createcommendData();
 //createNewsLabelData();
 // find data
 //$time1=microtime(true);
@@ -57,6 +88,12 @@ switch ($type) {
 //  $time1=microtime(true);
 //   $newsDao->getRecommendNewsdd($userId, $num);
 // echo "<br>time is :".(microtime(true)-$time1)."<br>";
+//echo getDataByFileName("D:/wa.txt");
+
+//test storage and remvoe
+//$news_id=array(2,6,7);
+//$newsController->store($news_id);
+//$newsController->remove($news_id);
 
 function createcommendData(){
 	 $newsDao=new NewsDao();
