@@ -197,6 +197,7 @@ class NewsDao {
 	
 }
 function str_n_pos($str, $n) {
+	if(!$n)return 0;
 	$length = strlen ( $str );
 	$j = 0;
 	for($i = 0; $i <= $length; $i ++) {
@@ -205,6 +206,6 @@ function str_n_pos($str, $n) {
 		if ($j == $n)
 			return $i;
 	}
-	return 0;
+	return $length;
 }
 ?>

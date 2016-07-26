@@ -12,12 +12,10 @@ class UserModel {
 		$_SESSION ["userName"] = $user_info->user_name;
 		setcookie ( "userId", string2secret($user_info->user_id) );
 		setcookie ( "userName", $user_info->user_name );
-		
+		setcookie ( "userAccount", $userAccount);
 		if (count ( $rememberMe )) {
-			setcookie ( "userAccount", $userAccount);
 			setcookie ( "password", $password );
 		} else {
-			setcookie ( "userAccount", "" );
 			setcookie ( "password", "" );
 		}
 		return $result;
@@ -35,8 +33,48 @@ class UserModel {
 		// writeData($user->account." ".$user->password );
 		return $this->userDao->registerUser ( $user );
 	}
+	
+	function updateUser($user) {
+		// writeData($user->account." ".$user->password );
+		$num = count ( $user->interest );
+		$val = 0;
+		for($i = 0; $i < $num; ++ $i) {
+			$val += $user->interest [$i];
+		}
+		$user->interest = $val;
+		
+		$userId=secret2string($_SESSION ["userId"]);
+		// writeData($user->account." ".$user->password );
+		return $this->userDao->updateUser ( $user,$userId );
+	}
+	
 	function checkAccount($userAccount) {
 		return $this->userDao->checkUserAccount ( md5 ( $userAccount ) );
+	}
+	
+	function getUserById(){
+		//writeData($_SESSION ["userId"]);
+		$userId=secret2string ( $_SESSION ["userId"] );
+		//writeData("   ".$userId);
+		return $this->userDao->getUserInfo($userId);
+	}
+	
+	function getStorageById($num,$offset){
+		$userId=secret2string ( $_SESSION ["userId"] );
+		return $this->userDao->getStorageById($userId,$num,$offset);
+	}
+	
+	function getStoragePageCount(){
+		$userId=secret2string ( $_SESSION ["userId"] );
+		return $this->userDao->getStoragePageCount($userId);
+	}
+	
+	function getSearchValCount($search_val){
+		return $this->userDao->getSearchValCount($search_val);
+	}
+	
+	function getSearchVal($num,$offset){
+		return $this->userDao->getSearchVal($num,$offset);
 	}
 }
 

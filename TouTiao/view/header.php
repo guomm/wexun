@@ -7,18 +7,17 @@
 			</a>
 		</div>
 		<div class="col-sm-6 header-text">
-			<form action="">
-				<input type="search" class="form-control" id="exampleInputEmail1"
+				<input type="search" class="form-control" id="search_input"
 					placeholder="大家都在搜: 周一情侣">
-			</form>
+					<button id="searchBut" class="searchBut"></button>
 		</div>
 		<div class="col-sm-4 text-center header-text">
 		<?php  
 		if($_COOKIE['userName']){
-			echo "<a href='#0' id='userName'>".$_COOKIE['userName']."</a>";
+			echo "<a href='userInfo.php' id='userName'>".$_COOKIE['userName']."</a>";
 		}else{
 			echo "<button class='btn btn-primary main_nav' id='loginbut' type='button'>登录</button>";
-			echo "<a href='#0' id='userName'></a>";
+			echo "<a href='userInfo.php' id='userName'></a>";
 		}?>
 			
 		</div>

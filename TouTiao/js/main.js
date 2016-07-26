@@ -65,6 +65,11 @@ jQuery(document).ready(function($){
         		
         });
 	});
+	
+	$("#searchBut").on("click",function(event){
+		//alert("D");
+		window.location.href="search.php?search_val="+$("#search_input").val();  
+	});
 });
 
 

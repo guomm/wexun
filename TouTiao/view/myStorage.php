@@ -153,7 +153,7 @@ a:hover {
 </body>
 <script type="text/javascript">
 $(".tcdPageCode").createPage({
-    pageCount:6,
+    pageCount:60,
     current:1,
     backFn:function(p){
         //单机回调方法

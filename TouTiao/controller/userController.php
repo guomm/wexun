@@ -28,12 +28,35 @@ class UserController {
 		echo $this->userModel->registerU ( $user );
 	}
 	
+	function updaetUser ($user){
+		echo $this->userModel->updateUser ( $user );
+	}
+	
 	function checkAccount($userAccount) {
 		$result = $this->userModel->checkAccount ( $userAccount );
 		if ($result)
 			echo 'false';
 		else
 			echo 'true';
+	}
+	
+	function getUserById(){
+		echo $this->userModel->getUserById();
+	}
+	
+	function getStorageById($num,$offset){
+		echo $this->userModel->getStorageById($num,$offset);
+	}
+	function getStoragePageCount(){
+		echo $this->userModel->getStoragePageCount();
+	}
+	
+	function getSearchValCount($search_val){
+		echo $this->userModel->getSearchValCount($search_val);
+	}
+	
+	function getSearchVal($num,$offset){
+		echo $this->userModel->getSearchVal($num,$offset);
 	}
 }
 

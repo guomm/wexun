@@ -71,9 +71,40 @@ switch ($type) {
 		$news_id = $_POST ["news_id"];
 		$describe = $_POST ["describe"];
 		$newsController->reportNews($news_id,$describe);
-		echo 1;
+		break;
+	case "getUserById" :
+		$userController->getUserById();
+		break;
+		
+	case "updateUser" :
+		$userName = $_POST ["user_name"];
+		$birthday = $_POST ["birthday"];
+		$gender = $_POST ["gender"];
+		$interest = $_POST ["interest"];
+		$user=new User($userName, $gender, $account, $birthday, $interest,$password);
+		$userController->updaetUser ($user);
+		//echo 1;
+		break;
+	case "getStorageById" :
+		$num = $_POST ["num"];
+		$offset = $_POST ["offset"];
+		$userController->getStorageById($num,$offset);
+		break;
+	case "getStoragePageCount" :
+		$userController->getStoragePageCount();
+		break;
+	case "searchVal" :
+		$num = $_POST ["num"];
+		$offset = $_POST ["offset"];
+		$userController->getSearchVal($num,$offset);
+		break;
+	case "searchValCount" :
+		$search_val=$_POST ["search_val"];
+		$userController->getSearchValCount($search_val);
 		break;
 }
+//test storage
+//$userController->getStorageById(10,2);
 
 //test mysql
 //add data 
