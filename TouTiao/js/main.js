@@ -53,11 +53,19 @@ jQuery(document).ready(function($){
     		success: function(data){
         			//alert(data.user_id);
         			//alert(data.user_name);
-    			
-        			$form_modal.removeClass('is-visible');
-        			$("#loginbut").hide();
-        			$("#userName").html(data.user_name);
-        			$("#userName").show();
+    				//console.log(data);
+    				if(data==0){
+    					alert("用户名或密码错误");
+    				}else{
+    					$form_modal.removeClass('is-visible');
+            			$("#loginbut").hide();
+            			$("#userName").html(data.user_name);
+            			$("#userName").show();
+            			$("#logout").show();
+            			//alert("刷新当前界面");
+            			 location.reload();
+    				}
+        			
         	},  
         	error:function(){
         			alert("用户名或密码错误");
@@ -70,6 +78,8 @@ jQuery(document).ready(function($){
 		//alert("D");
 		window.location.href="search.php?search_val="+$("#search_input").val();  
 	});
+	
+	
 });
 
 

@@ -8,72 +8,10 @@
 	href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
 <script src="../js/jquery.min.js"></script>
 <script src="../js/jquery.validate.js"></script>
-<script src="../js/register.js"></script>
 <script src="../js/jquery.page.js"></script>
 <script src="../js/main.js"></script>
 <link rel="stylesheet" href="../css/common.css">
 <link rel="stylesheet"  href="../css/style.css" />
-<style>
-
-a {
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: none;
-}
-
-.tcdPageCode {
-	padding: 15px 20px;
-	text-align: left;
-	color: #ccc;
-}
-
-.tcdPageCode a {
-	display: inline-block;
-	color: #428bca;
-	display: inline-block;
-	height: 25px;
-	line-height: 25px;
-	padding: 0 10px;
-	border: 1px solid #ddd;
-	margin: 0 2px;
-	border-radius: 4px;
-	vertical-align: middle;
-	color:#000000;
-}
-
-.tcdPageCode a:hover {
-	text-decoration: none;
-	border: 1px solid #428bca;
-}
-
-.tcdPageCode span.current {
-	display: inline-block;
-	height: 25px;
-	line-height: 25px;
-	padding: 0 10px;
-	margin: 0 2px;
-	color: #fff;
-	background-color: #428bca;
-	border: 1px solid #428bca;
-	border-radius: 4px;
-	vertical-align: middle;
-}
-
-.tcdPageCode span.disabled {
-	display: inline-block;
-	height: 25px;
-	line-height: 25px;
-	padding: 0 10px;
-	margin: 0 2px;
-	color: #bfbfbf;
-	background: #f2f2f2;
-	border: 1px solid #bfbfbf;
-	border-radius: 4px;
-	vertical-align: middle;
-}
-</style>
 
 </head>
 <body>
@@ -82,7 +20,7 @@ a:hover {
 <div class="container">
 		<div class="col-sm-2 text-center">
 			<ul class="list-unstyled category">
-				<li><a id="user_info" class="bg-click" href="userInfo.php">个人信息</a></li>
+				<li><a id="user_info" href="#0">个人信息</a></li>
 				<li><a href="#0" id="mystorage">我的收藏</a></li>
 			</ul>
 		</div>
@@ -97,121 +35,177 @@ a:hover {
 <script src="../js/zh-cn.js"></script>
 <script >
 $(document).ready(function () {
-    <?php
-    echo "var account=" . $_COOKIE ["userAccount"] . ";";
-    ?>
-    $.ajax({
-    	url: "../room.php",  
-    	data: {
-    		'type':'getUserById',
-    	},
-    	type:'post',
-    	dataType:'json',
-    	success: function(data){
-    	   console.log(data);
-    	   var male=(data.user_gender==1)?"checked":"";
-    	   var female=(data.user_gender==0)?"checked":"";
-    	   var sport=((data.user_label % 10)==1)?"checked":"";
-    	   var music=((parseInt(data.user_label / 10) % 10)==1)?"checked":"";
-    	   var group=((parseInt(data.user_label / 100)% 10)==1)?"checked":"";
-    	   var money=((parseInt(data.user_label / 1000)% 10)==1)?"checked":"";
-    	   var vals='';
-    	   vals+="<form class='form-horizontal login-form' id='register_form' method='post' >"+
-    	    		"<div class='form-group'>"+
-    	    			"<label for='ff-user' class='col-md-3 control-label'>账号</label>"+
-    	    			"<div class='col-md-4'>"+
-    	    				"<input type='text' class='form-control' id='user_account' "+
-    	    					"name='user_account' value='"+account+"' readonly='readonly'>"+
-    	    			"</div>"+
-    	    			"<p class='col-md-4 form-control-static text-danger'></p>"+
-    	    		"</div>"+
-    	    		"<div class='form-group'>"+
-    	    		"<label for='ff-user' class='col-md-3 control-label'>用户名</label>"+
-    	    		"<div class='col-md-4'>"+
-    	    			"<input type='text' class='form-control' id='user_name' "+
-    	    				"name='user_name' value='"+data.user_name+"'>"+
-    	    		"</div>"+
-    	    		"<p class='col-md-4 form-control-static text-danger'></p>"+
-    	    	"</div>"+
-    	    		"<div class='form-group'>"+
-    	    			"<label for='ff-birthday' class='col-md-3 control-label'>生日</label>"+
-    	    			"<div class='col-md-4'>"+
-    	    				"<div class='input-group date' id='datetimepicker1' >"+
-    	    					"<input type='text' class='form-control' id='birthday' "+
-    	    						"name='birthday' value='"+data.user_birthday+"'/> <span class='input-group-addon'> <span "+
-    	    						"class='glyphicon glyphicon-calendar'></span>"+
-    	    					"</span>"+
-    	    				"</div>"+
-    	    			"</div>"+
-    	    			"<p class='col-md-4 form-control-static text-danger'></p>"+
-    	    		"</div>"+
-    	    		"<div class='form-group'>"+
-    	    			"<label for='ff-repsw' class='col-md-3 control-label'>性别</label> <label "+
-    	    				"class='col-md-1 radio-inline radio-type'> <input type='radio' "+
-    	    				" name='gender' value='1' "+male+"> 男 "+
-    	    			"</label> <label class='col-md-1 radio-inline '> <input type='radio' "+
-    	    			"	 name='gender' value='0' "+female+"> 女"+
-    	    			"</label>"+
-    	    			"<p class='col-md-4 form-control-static text-danger'></p>"+
-    	    	"	</div>"+
-    	    		"<div class='form-group'>"+
-    	    			"<label for='ff-repsw' class='col-md-3 control-label'>爱好</label> <label "+
-    	    				"class='checkbox-inline col-md-1 checkbox-type'> <input "+
-    	    				"type='checkbox' name='interest'  value='1' "+sport+"> 运动"+
-    	    			"</label> <label class='checkbox-inline col-md-1'> <input "+
-    	    			"	type='checkbox' name='interest'  value='10' "+music+"> 音乐"+
-    	    			"</label> <label class='checkbox-inline col-md-1'> <input "+
-    	    			"	type='checkbox' name='interest'  value='100' "+group+"> 军事"+
-    	    			"</label> <label class='checkbox-inline col-md-1'> <input "+
-    	    				"type='checkbox' name='interest'  value='1000' "+money+"> 财经"+
-    	    			"</label>"+
-    	    			"<p class='col-md-4 form-control-static text-danger'></p>"+
-    	    		"</div>"+
-    	    		"<input type='hidden' name='type' value='updateUser'>"+
-    	    		"<div class='form-group'>"+
-    	    			"<div class='col-md-offset-3 col-md-4'>"+
-    	    			"	<button id='update_user' class='btn btn-primary'>修改</button>"+
-    	    			"</div>"+
-    	    		"</div>"+
-    	    	"</form>";
-    	    		$("#user_content").html(vals);
-    	    		 $('#datetimepicker1').datetimepicker({
-    	    		        locale: 'zh-cn',
-    	    		        format: 'YYYY-MM-DD'
-    	    		    });
-    	    		 $("#update_user").on('click', function(event){
-    	     	    	//$('#register_form').submit();
-    	     	    	alert("D");
-    	     	    	var formParam = $("#register_form").serialize();
-    	     	    	$.ajax({
-    	     	    		url: "../room.php",  
-    	     	    		data: formParam,
-    	     	    		type:'post',
-    	     	    		dataType:'text',
-    	     	    		success: function(data){
-    	     	        		if(data ==1){
-    	     	        			alert("修改成功");
-    	     	        			//$('#register_form')[0].reset();
-    	     	        		}else{
-    	     	        			alert("修改失败，请稍候再试");
-    	     	        		}
-    	     	        	},  
-    	     	        	error:function(){
-    	     	        			alert("注册失败，请稍候再试");
-    	     	        	}
-    	     	        		
-    	     	        });
-    	     	    });
-    	    	},  
-    	    	error:function(){
-    	    			alert("加载失败，请稍候再试");
-    	    	}
-    	    });
-	});
+    $("#user_info").click();
+});
+
+$("#user_info").on('click', function(event){
+	<?php
+		echo "var account=" . $_COOKIE ["userAccount"] . ";";
+		echo "var isLogin='" . $_COOKIE ["userName"] . "';";
+	?>
+	$("#mystorage").removeClass("bg-click");
+	$("#user_info").addClass("bg-click");
+	if(isLogin.length==0)return;
+	 $.ajax({
+	    	url: "../room.php",  
+	    	data: {
+	    		'type':'getUserById',
+	    	},
+	    	type:'post',
+	    	dataType:'json',
+	    	success: function(data){
+	    	   console.log(data);
+	    	   var male=(data.user_gender==1)?"checked":"";
+	    	   var female=(data.user_gender==0)?"checked":"";
+	    	   var sport=((data.user_label % 10)==1)?"checked":"";
+	    	   var music=((parseInt(data.user_label / 10) % 10)==1)?"checked":"";
+	    	   var group=((parseInt(data.user_label / 100)% 10)==1)?"checked":"";
+	    	   var money=((parseInt(data.user_label / 1000)% 10)==1)?"checked":"";
+	    	   var vals='';
+	    	   vals+="<form class='form-horizontal login-form' id='register_form' method='post' >"+
+	    	    		"<div class='form-group'>"+
+	    	    			"<label for='ff-user' class='col-md-3 control-label'>账号</label>"+
+	    	    			"<div class='col-md-4'>"+
+	    	    				"<input type='text' class='form-control' id='user_account' "+
+	    	    					"name='user_account' value='"+account+"' readonly='readonly'>"+
+	    	    			"</div>"+
+	    	    			"<p class='col-md-4 form-control-static text-danger'></p>"+
+	    	    		"</div>"+
+	    	    		"<div class='form-group'>"+
+	    	    		"<label for='ff-user' class='col-md-3 control-label'>用户名</label>"+
+	    	    		"<div class='col-md-4'>"+
+	    	    			"<input type='text' class='form-control' id='user_name' "+
+	    	    				"name='user_name' value='"+data.user_name+"'>"+
+	    	    		"</div>"+
+	    	    		"<p class='col-md-4 form-control-static text-danger'></p>"+
+	    	    	"</div>"+
+	    	    		"<div class='form-group'>"+
+	    	    			"<label for='ff-birthday' class='col-md-3 control-label'>生日</label>"+
+	    	    			"<div class='col-md-4'>"+
+	    	    				"<div class='input-group date' id='datetimepicker1' >"+
+	    	    					"<input type='text' class='form-control' id='birthday' "+
+	    	    						"name='birthday' value='"+data.user_birthday+"'/> <span class='input-group-addon'> <span "+
+	    	    						"class='glyphicon glyphicon-calendar'></span>"+
+	    	    					"</span>"+
+	    	    				"</div>"+
+	    	    			"</div>"+
+	    	    			"<p class='col-md-4 form-control-static text-danger'></p>"+
+	    	    		"</div>"+
+	    	    		"<div class='form-group'>"+
+	    	    			"<label for='ff-repsw' class='col-md-3 control-label'>性别</label> <label "+
+	    	    				"class='col-md-1 radio-inline radio-type'> <input type='radio' "+
+	    	    				" name='gender' value='1' "+male+"> 男 "+
+	    	    			"</label> <label class='col-md-1 radio-inline '> <input type='radio' "+
+	    	    			"	 name='gender' value='0' "+female+"> 女"+
+	    	    			"</label>"+
+	    	    			"<p class='col-md-4 form-control-static text-danger'></p>"+
+	    	    	"	</div>"+
+	    	    		"<div class='form-group'>"+
+	    	    			"<label for='ff-repsw' class='col-md-3 control-label'>爱好</label> <label "+
+	    	    				"class='checkbox-inline col-md-1 checkbox-type'> <input "+
+	    	    				"type='checkbox' name='interest'  value='1' "+sport+"> 运动"+
+	    	    			"</label> <label class='checkbox-inline col-md-1'> <input "+
+	    	    			"	type='checkbox' name='interest'  value='10' "+music+"> 音乐"+
+	    	    			"</label> <label class='checkbox-inline col-md-1'> <input "+
+	    	    			"	type='checkbox' name='interest'  value='100' "+group+"> 军事"+
+	    	    			"</label> <label class='checkbox-inline col-md-1'> <input "+
+	    	    				"type='checkbox' name='interest'  value='1000' "+money+"> 财经"+
+	    	    			"</label>"+
+	    	    			"<p class='col-md-4 form-control-static text-danger'></p>"+
+	    	    		"</div>"+
+	    	    		"<input type='hidden' name='type' value='updateUser'>"+
+	    	    		"<div class='form-group'>"+
+	    	    			"<div class='col-md-offset-3 col-md-4'>"+
+	    	    			"	<button id='update_user' class='btn btn-primary'>修改</button>"+
+	    	    			"</div>"+
+	    	    		"</div>"+
+	    	    	"</form>";
+	    	    		$("#user_content").html(vals);
+	    	    		 $('#datetimepicker1').datetimepicker({
+	    	    		        locale: 'zh-cn',
+	    	    		        format: 'YYYY-MM-DD'
+	    	    		    });
+	    	    		 $("#update_user").on('click', function(event){
+	    	     	    	//$('#register_form').submit();
+	    	     	    	//alert("D");
+	    	     	    	var formParam = $("#register_form").serialize();
+	    	     	    	$.ajax({
+	    	     	    		url: "../room.php",  
+	    	     	    		data: formParam,
+	    	     	    		type:'post',
+	    	     	    		dataType:'text',
+	    	     	    		success: function(data){
+	    	     	        		if(data ==1){
+	    	     	        			alert("修改成功");
+	    	     	        			//$('#register_form')[0].reset();
+	    	     	        		}else{
+	    	     	        			alert("修改失败，请稍候再试");
+	    	     	        		}
+	    	     	        	},  
+	    	     	        	error:function(){
+	    	     	        			alert("注册失败，请稍候再试");
+	    	     	        	}
+	    	     	        		
+	    	     	        });
+	    	     	    });
+
+	      	     	    //加载js
+	    	    		 jQuery.validator
+	    	 			.addMethod("verify_length",
+	    	 					function(value, element) {
+	    	 						return this.optional(element)
+	    	 								|| ($.trim(value).length >= 3 && $.trim(value).length <= 15);
+	    	 					}, "请输入3-15个字符");
+	    	 	jQuery.validator
+	    	 	.addMethod("birthday_verify",
+	    	 			function(value, element) {
+	    	 				var birth_verify= /^((19\d{2})|(20\d{2}))-((0[1-9])|(1[0-2]))-((0[1-9])|([1-2][0-9])|(3([0|1])))$/;
+	    	 				return this.optional(element)
+	    	 						|| (birth_verify.test(value));
+	    	 			}, "请正确输入生日格式YYYY-MM-DD");
+	    	 	
+	    	 	$("#register_form").validate({
+	    	 		errorPlacement : function(error, element) {
+	    	 			var error_td = element.parent('div').parent('div');
+	    	 			error_td.find('p').html(error);
+	    	 		},
+	    	 		submitHandler : function(form) {
+	    	 		},
+	    	 		rules : {
+	    	 			user_name : {
+	    	 				required : true,
+	    	 				verify_length : true
+	    	 			},
+	    	 			birthday : {
+	    	 				required : true,
+	    	 				birthday_verify:true 
+	    	 			}
+	    	 		},
+	    	 		messages : {
+	    	 			user_name : {
+	    	 				required : '用户名不能为空',
+	    	 				verify_length:'用户名必须在3-15个字符之间'
+	    	 			},
+	    	 			birthday : {
+	    	 				required : '请填写生日',
+	    	 				birthday_verify : '生日格式为YYYY-MM-DD'
+	    	 			}
+
+	    	 		}
+	    	 	});
+	    	 	
+	    	    	},  
+	    	    	error:function(){
+	    	    			alert("加载失败，请稍候再试");
+	    	    	}
+	    	    });
+});
 
 $("#mystorage").on('click', function(event){
 	$("#user_info").removeClass("bg-click");
 	$("#mystorage").addClass("bg-click");
+	<?php echo "var isLogin='" . $_COOKIE ["userName"] . "';";?>
+	if(isLogin.length==0)return;
  	$.ajax({
  		url: "../room.php",  
  		data: {

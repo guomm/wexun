@@ -60,11 +60,4 @@ class UserController {
 	}
 }
 
-
-
-function jumpPage($url) {
-	echo "<script type='text/javascript'>";
-	echo "window.location.href='$url';";
-	echo "</script>";
-}
 ?>

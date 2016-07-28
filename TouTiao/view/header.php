@@ -12,14 +12,10 @@
 					<button id="searchBut" class="searchBut"></button>
 		</div>
 		<div class="col-sm-4 text-center header-text">
-		<?php  
-		if($_COOKIE['userName']){
-			echo "<a href='userInfo.php' id='userName'>".$_COOKIE['userName']."</a>";
-		}else{
-			echo "<button class='btn btn-primary main_nav' id='loginbut' type='button'>登录</button>";
-			echo "<a href='userInfo.php' id='userName'></a>";
-		}?>
-			
+		<a href="index.php">首页&nbsp;&nbsp;&nbsp;</a>
+		<a href='userInfo.php' id='userName'></a>
+		&nbsp;&nbsp;&nbsp;<a href='#0' id='logout'>退出</a>
+		<button class='btn btn-primary main_nav' id='loginbut' type='button'>登录</button>
 		</div>
 	</div>
 </header>
@@ -67,3 +63,44 @@
 
 	</div>
 </div>
+
+<script>
+<?php 
+echo "var userName='".$_COOKIE["userName"]."';";
+?>
+
+if(userName.length>0){
+	$("#loginbut").hide();
+	$("#userName").show();
+	$("#logout").show();
+	$("#userName").html(userName);
+}else{
+	$("#userName").hide();
+	$("#logout").hide();
+	$("#loginbut").show();
+}
+
+$("#logout").on("click",function(event){
+	//alert("D");
+	//window.location.href="search.php?search_val="+$("#search_input").val();  
+	$.ajax({
+    		url: '../room.php',  
+    		data: {
+				'type':'logout'
+        	},
+    		type:'post',
+    		dataType:'json',
+    		success: function(data){
+    			$("#userName").hide();
+    			$("#logout").hide();
+    			$("#loginbut").show();
+    			location.reload();
+        	},  
+        	error:function(){
+            	
+        	}
+        		
+        });
+	
+});
+</script>

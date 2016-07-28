@@ -1,26 +1,31 @@
 <?php
 require_once ("dao/userDao.php");
+require_once("common.php");
 class UserModel {
 	private $userDao;
 	function __construct() {
 		$this->userDao = new UserDao ();
 	}
-	function loginCheck($userAccount, $password, $rememberMe) {
+	function login($userAccount, $password, $rememberMe) {
 		$result = $this->userDao->login ( md5 ( $userAccount ), md5 ( $password ) );
-		$user_info = json_decode ( $result );
-		$_SESSION ["userId"] = string2secret($user_info->user_id);
-		$_SESSION ["userName"] = $user_info->user_name;
-		setcookie ( "userId", string2secret($user_info->user_id) );
-		setcookie ( "userName", $user_info->user_name );
-		setcookie ( "userAccount", $userAccount);
-		if (count ( $rememberMe )) {
-			setcookie ( "password", $password );
-		} else {
-			setcookie ( "password", "" );
+		if ($result) {
+			$user_info = json_decode ( $result );
+			$_SESSION ["userId"] = string2secret ( $user_info->user_id );
+			$_SESSION ["userName"] = $user_info->user_name;
+			setcookie ( "userId", string2secret ( $user_info->user_id ) );
+			setcookie ( "userName", $user_info->user_name );
+			setcookie ( "userAccount", $userAccount );
+			if (count ( $rememberMe )) {
+				setcookie ( "password", $password );
+			} else {
+				setcookie ( "password", "" );
+			}
 		}
-		return $result;
+		
+		echo $result;
+		$this->userDao->closeConn();
 	}
-	function registerU($user) {
+	function register($user) {
 		// writeData($user->account." ".$user->password );
 		$user->account = md5 ( $user->account );
 		$user->password = md5 ( $user->password );
@@ -31,9 +36,9 @@ class UserModel {
 		}
 		$user->interest = $val;
 		// writeData($user->account." ".$user->password );
-		return $this->userDao->registerUser ( $user );
+		echo $this->userDao->registerUser ( $user );
+		$this->userDao->closeConn();
 	}
-	
 	function updateUser($user) {
 		// writeData($user->account." ".$user->password );
 		$num = count ( $user->interest );
@@ -43,70 +48,57 @@ class UserModel {
 		}
 		$user->interest = $val;
 		
-		$userId=secret2string($_SESSION ["userId"]);
+		$userId = secret2string ( $_SESSION ["userId"] );
 		// writeData($user->account." ".$user->password );
-		return $this->userDao->updateUser ( $user,$userId );
+		echo $this->userDao->updateUser ( $user, $userId );
+		$this->userDao->closeConn();
 	}
-	
 	function checkAccount($userAccount) {
-		return $this->userDao->checkUserAccount ( md5 ( $userAccount ) );
+		$result = $this->userDao->checkUserAccount ( md5 ( $userAccount ) );
+		$returnVal='';
+		if ($result)
+			$returnVal= 'false';
+		else
+			$returnVal= 'true';
+		echo $returnVal;
+		
+		$this->userDao->closeConn();
+	}
+	function getUserById() {
+		// writeData($_SESSION ["userId"]);
+		$userId = secret2string ( $_SESSION ["userId"] );
+		// writeData(" ".$userId);
+		echo $this->userDao->getUserInfo ( $userId );
+		$this->userDao->closeConn();
+	}
+	function getStorageById($num, $offset) {
+		$userId = secret2string ( $_SESSION ["userId"] );
+		echo $this->userDao->getStorageById ( $userId, $num, $offset );
+		$this->userDao->closeConn();
+	}
+	function getStoragePageCount() {
+		$userId = secret2string ( $_SESSION ["userId"] );
+		echo $this->userDao->getStoragePageCount ( $userId );
+		$this->userDao->closeConn();
+	}
+	function getSearchValCount($search_val) {
+		echo $this->userDao->getSearchValCount ( $search_val );
+		$this->userDao->closeConn();
+	}
+	function getSearchVal($num, $offset) {
+		echo $this->userDao->getSearchVal ( $num, $offset );
+		$this->userDao->closeConn();
 	}
 	
-	function getUserById(){
-		//writeData($_SESSION ["userId"]);
-		$userId=secret2string ( $_SESSION ["userId"] );
-		//writeData("   ".$userId);
-		return $this->userDao->getUserInfo($userId);
-	}
-	
-	function getStorageById($num,$offset){
-		$userId=secret2string ( $_SESSION ["userId"] );
-		return $this->userDao->getStorageById($userId,$num,$offset);
-	}
-	
-	function getStoragePageCount(){
-		$userId=secret2string ( $_SESSION ["userId"] );
-		return $this->userDao->getStoragePageCount($userId);
-	}
-	
-	function getSearchValCount($search_val){
-		return $this->userDao->getSearchValCount($search_val);
-	}
-	
-	function getSearchVal($num,$offset){
-		return $this->userDao->getSearchVal($num,$offset);
+	function logout(){
+		unset($_SESSION['userId']);
+		unset($_SESSION['userName']);
+		setcookie ( "userId", '',time()-3600 );
+		setcookie ( "userName", '',time()-3600);
+		echo 1;
+		$this->userDao->closeConn();
 	}
 }
 
-//加密
-function string2secret($str)
-{
-	$key = "123";
-	$td = mcrypt_module_open(MCRYPT_DES,'','ecb','');
-	$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
-	$ks = mcrypt_enc_get_key_size($td);
 
-	$key = substr(md5($key), 0, $ks);
-	mcrypt_generic_init($td, $key, $iv);
-	$secret = mcrypt_generic($td, $str);
-	mcrypt_generic_deinit($td);
-	mcrypt_module_close($td);
-	return $secret;
-}
-
-//解密
-function secret2string($sec)
-{
-	$key = "123";
-	$td = mcrypt_module_open(MCRYPT_DES,'','ecb','');
-	$iv = mcrypt_create_iv(mcrypt_enc_get_iv_size($td), MCRYPT_RAND);
-	$ks = mcrypt_enc_get_key_size($td);
-
-	$key = substr(md5($key), 0, $ks);
-	mcrypt_generic_init($td, $key, $iv);
-	$string = mdecrypt_generic($td, $sec);
-	mcrypt_generic_deinit($td);
-	mcrypt_module_close($td);
-	return trim($string);
-}
 ?>

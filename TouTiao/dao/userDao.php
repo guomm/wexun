@@ -4,10 +4,8 @@ require_once ("dao/commonDao.php");
 class UserDao {
 	private $conn;
 	function __construct() {
-		if (! CommonDao::$conn) {
-			$this->conn = CommonDao::createConn ();
-		}
-		if (! CommonDao::$conn) {
+		$this->conn = createConnection ();
+		if (! $this->conn) {
 			echo "Could not connect: " . CommonDao::$conn->connect_error;
 		}
 	}
@@ -15,7 +13,7 @@ class UserDao {
 		$sql = "select user_id,user_name from user where account='$userAccount' and password='$password' limit 1 ";
 		// writeData($sql."\n");
 		$res = $this->conn->query ( $sql );
-		if ($res)
+		if ($res->num_rows)
 			return json_encode ( $res->fetch_assoc () );
 		return 0;
 	}
@@ -90,8 +88,7 @@ class UserDao {
 		}
 		return 0;
 	}
-	
-	function getSearchValCount($search_val){
+	function getSearchValCount($search_val) {
 		$res = $this->conn->query ( "select count(*) as count from news where news_title like '%" . $search_val . "%'" );
 		if ($res) {
 			$storage = $res->fetch_assoc () ["count"];
@@ -100,14 +97,16 @@ class UserDao {
 		}
 		return 0;
 	}
-	
-	function getSearchVal($num,$offset){
-		$sql = "select news_id,agency_name,news_title,news_time,news_imgs,news_img_num,news_abstract from news where news_title like '%" . $search_val . "%' order by news_time limit ".$offset.",".$num;
-		$res = $this->conn->query ($sql);
+	function getSearchVal($num, $offset) {
+		$sql = "select news_id,agency_name,news_title,news_time,news_imgs,news_img_num,news_abstract from news where news_title like '%" . $search_val . "%' order by news_time limit " . $offset . "," . $num;
+		$res = $this->conn->query ( $sql );
 		if ($res) {
 			return json_encode ( $res->fetch_all ( MYSQLI_ASSOC ) );
-		} 
+		}
 		return 0;
+	}
+	function closeConn() {
+		closeConnection ( $this->conn );
 	}
 }
 ?>

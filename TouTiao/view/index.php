@@ -10,11 +10,35 @@
 <script src="../js/bootstrap.min.js"></script>
 
 <script src="../js/main.js"></script>
+
+</head>
+<body>
+<?php include("header.php")?>
+
+    <div class="container" id="con">
+		<div class="col-sm-2 text-center">
+			<ul class="list-unstyled category">
+				<li><a href="#0" id="recomm"><img src="../images/recomment.svg">推荐</a></li>
+				<li><a href="#0" id="hot"><img src="../images/hot.svg">热点</a></li>
+				<li><a href="#0" id="science"><img src="../images/science.svg">科技</a></li>
+				<li><a href="#0" id="enjoy"><img src="../images/enjoy.svg">娱乐</a></li>
+				<li><a href="#0" id="money"><img src="../images/money.svg">财经</a></li>
+				<li><a href="#0" id="physical"><img src="../images/physical.svg">体育</a></li>
+				<li><a href="#0" id="car"><img src="../images/car.svg">汽车</a></li>
+			</ul>
+		</div>
+		<div class="col-sm-10" id="tmp">
+		</div>
+	</div>
+</body>
+
 <script type="text/javascript">
 var mark = true; 
 function setTure(){
 	mark = true; 
 } 
+
+var currentType=0;
 
 function transferTime(time){
 	var returnVal;
@@ -30,35 +54,131 @@ function transferTime(time){
 	}
 	return returnVal;
 }
-$.ajax({
-	url: "../room.php",  
-	data: {
-		'type':'getRecommendNews',
-		'num':10
-	},
-	type:'post',
-	dataType:'json',
-	success: function(data){
-		//alert(data);
-		var vals="";
-		for(var i=0;i<data.length;i++){
-			//console.log(date('Y-m-d H:i:s')-data[i].news_time);
-			console.log(data[i].news_time);
-			if(data[i].news_img_num==0){
-				vals+=loadDataNoPic(data[i]);
-			}else if(data[i].news_img_num==1){
-				vals+=loadDataOnePic(data[i]);
-			}else{
-				vals+=loadDataThreePic(data[i]);
+
+function loadData(type,labelId,labelName,num,isAdd){
+	currentType=labelId;
+	$.ajax({
+		url: "../room.php",  
+		data: {
+			'type':type,
+			'num':num,
+			'labelId':labelId,
+			'labelName':labelName
+		},
+		type:'post',
+		dataType:'json',
+		success: function(data){
+			//alert(data);
+			var vals="";
+			for(var i=0;i<data.length;i++){
+				//console.log(date('Y-m-d H:i:s')-data[i].news_time);
+				console.log(data[i].news_time);
+				if(data[i].news_img_num==0){
+					vals+=loadDataNoPic(data[i]);
+				}else if(data[i].news_img_num==1){
+					vals+=loadDataOnePic(data[i]);
+				}else{
+					vals+=loadDataThreePic(data[i]);
+				}
 			}
+			if(!isAdd)$("#tmp").html(vals);
+			else $("#tmp").append(vals);
+		},  
+		error:function(){
+				alert("加载失败，请稍候再试");
 		}
-		$("#tmp").html(vals);
-	},  
-	error:function(){
-			alert("加载失败，请稍候再试");
-	}
-		
+			
+	});
+}
+
+
+
+$("#recomm").on('click', function(event){
+	//alert("df");
+	$("#recomm").addClass("bg-click");
+	$("#hot").removeClass("bg-click");
+	$("#science").removeClass("bg-click");
+	$("#enjoy").removeClass("bg-click");
+	$("#money").removeClass("bg-click");
+	$("#car").removeClass("bg-click");
+	$("#physical").removeClass("bg-click");
+
+	loadData("getRecommendNews",0,"recom",15,0);
 });
+
+$("#science").on('click', function(event){
+	$("#science").addClass("bg-click");
+	$("#hot").removeClass("bg-click");
+	$("#recomm").removeClass("bg-click");
+	$("#enjoy").removeClass("bg-click");
+	$("#money").removeClass("bg-click");
+	$("#car").removeClass("bg-click");
+	$("#physical").removeClass("bg-click");
+
+	loadData("getNewsByLabel",1,"science",15,0);
+});
+
+
+$("#hot").on('click', function(event){
+	$("#hot").addClass("bg-click");
+	$("#recomm").removeClass("bg-click");
+	$("#science").removeClass("bg-click");
+	$("#enjoy").removeClass("bg-click");
+	$("#money").removeClass("bg-click");
+	$("#car").removeClass("bg-click");
+	$("#physical").removeClass("bg-click");
+
+	loadData("getNewsByLabel",2,"hot",15,0);
+});
+
+$("#enjoy").on('click', function(event){
+	$("#enjoy").addClass("bg-click");
+	$("#hot").removeClass("bg-click");
+	$("#science").removeClass("bg-click");
+	$("#recomm").removeClass("bg-click");
+	$("#money").removeClass("bg-click");
+	$("#car").removeClass("bg-click");
+	$("#physical").removeClass("bg-click");
+
+	loadData("getNewsByLabel",3,"enjoy",15,0);
+});
+
+$("#money").on('click', function(event){
+	$("#money").addClass("bg-click");
+	$("#hot").removeClass("bg-click");
+	$("#science").removeClass("bg-click");
+	$("#enjoy").removeClass("bg-click");
+	$("#recomm").removeClass("bg-click");
+	$("#car").removeClass("bg-click");
+	$("#physical").removeClass("bg-click");
+
+	loadData("getNewsByLabel",4,"money",15,0);
+});
+
+$("#car").on('click', function(event){
+	$("#car").addClass("bg-click");
+	$("#hot").removeClass("bg-click");
+	$("#science").removeClass("bg-click");
+	$("#enjoy").removeClass("bg-click");
+	$("#money").removeClass("bg-click");
+	$("#recomm").removeClass("bg-click");
+	$("#physical").removeClass("bg-click");
+
+	loadData("getNewsByLabel",5,"car",15,0);
+});
+
+$("#physical").on('click', function(event){
+	$("#physical").addClass("bg-click");
+	$("#hot").removeClass("bg-click");
+	$("#science").removeClass("bg-click");
+	$("#enjoy").removeClass("bg-click");
+	$("#money").removeClass("bg-click");
+	$("#car").removeClass("bg-click");
+	$("#recomm").removeClass("bg-click");
+
+	loadData("getNewsByLabel",6,"physical",15,0);
+});
+
 
 function loadDataNoPic(data){
 	return "<div class='clearfix news-item '><div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
@@ -88,6 +208,11 @@ function loadDataThreePic(data){
 			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
 }
 
+$(document).ready(function () {
+	//alert("d");
+    $("#recomm").click();
+});
+
 $(window).scroll(function() {
 	//$(window).scrollTop()这个方法是当前滚动条滚动的距离
 	//$(window).height()获取当前窗体的高度
@@ -96,33 +221,31 @@ $(window).scroll(function() {
 	if (mark &&( bot+$(window).scrollTop()) >= ($(document).height() - $(window).height())) {
 		//当底部基本距离+滚动的高度〉=文档的高度-窗体的高度时；
 		//我们需要去异步加载数据了
-	$.ajax({
-		url: "../room.php",  
-		data: {
-			'type':'getRecommendNews',
-			'num':15
-		},
-		type:'post',
-		dataType:'json',
-		success: function(data){
-			//alert(data);
-			var vals="";
-			for(var i=0;i<data.length;i++){
-				console.log(data[i]);
-				if(data[i].news_img_num==0){
-					vals+=loadDataNoPic(data[i]);
-				}else if(data[i].news_img_num==1){
-					vals+=loadDataOnePic(data[i]);
-				}else{
-					vals+=loadDataThreePic(data[i]);
-				}
-			}
-			$("#tmp").append(vals);
-		},  
-		error:function(){
-			alert("加载失败，请稍候再试");
+		//alert(currentType);
+		switch(currentType){
+		case 0:
+			loadData("getRecommendNews",0,"recom",10,1);
+			break;
+		case 1:
+			loadData("getNewsByLabel",1,"science",10,1);
+			break;
+		case 2:
+			loadData("getNewsByLabel",2,"hot",10,1);
+			break;
+		case 3:
+			loadData("getNewsByLabel",3,"enjoy",10,1);
+			break;
+		case 4:
+			loadData("getNewsByLabel",4,"money",10,1);
+			break;
+		case 5:
+			loadData("getNewsByLabel",5,"car",10,1);
+			break;
+		case 6:
+			loadData("getNewsByLabel",6,"physical",10,1);
+			break;	
 		}
-	});
+
 	setTimeout(setTure,500); mark = false; 
 }
 
@@ -130,24 +253,4 @@ $(window).scroll(function() {
 
 
 </script>
-</head>
-<body>
-<?php include("header.php")?>
-
-    <div class="container" id="con">
-		<div class="col-sm-2 text-center">
-			<ul class="list-unstyled category">
-				<li><a class="bg-click" href="index.php"><img src="../images/recomment.svg">推荐</a></li>
-				<li><a href=""><img src="../images/hot.svg">热点</a></li>
-				<li><a href="science.php"><img src="../images/science.svg">科技</a></li>
-				<li><a href=""><img src="../images/enjoy.svg">娱乐</a></li>
-				<li><a href=""><img src="../images/money.svg">财经</a></li>
-				<li><a href=""><img src="../images/physical.svg">体育</a></li>
-				<li><a href=""><img src="../images/car.svg">汽车</a></li>
-			</ul>
-		</div>
-		<div class="col-sm-10" id="tmp">
-		</div>
-	</div>
-</body>
 </html>

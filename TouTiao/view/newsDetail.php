@@ -9,6 +9,7 @@
 <script type="text/javascript" src="../js/jquery.min.js"></script>
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/jquery.share.min.js"></script>
+<script src="../js/main.js"></script>
 <link rel="stylesheet" href="../css/share.min.css">
 <script type="text/javascript">
 
@@ -127,7 +128,12 @@ $.ajax({
 	</div>
 </body>
 <script type="text/javascript">
-	$("#storage-img").bind('click', function(){ 
+	$("#storage-img").bind('click', function(){
+		<?php echo "var isLogin='".$_COOKIE["userName"]."';"?> 
+		if(!isLogin){
+			$("#loginbut").click();
+			return;
+		}
 		var type=$("#storage-img").attr("src");
 		if(type == "../images/storage.png"){
 			$("#storage-img").attr("src","../images/unstorage.png");
@@ -167,6 +173,11 @@ $.ajax({
 		
 	}); 
 	$("#reomm-img").bind('click', function(){ 
+		<?php echo "var isLogin='".$_COOKIE["userName"]."';"?> 
+		if(!isLogin){
+			$("#loginbut").click();
+			return;
+		}
 		var type=$("#reomm-img").attr("src");
 		if(type == "../images/good2.png"){
 			$("#reomm-img").attr("src","../images/good.png");

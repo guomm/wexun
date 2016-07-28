@@ -8,7 +8,14 @@ class NewsController {
 		$this->userId = secret2string ( $_SESSION ["userId"] );
 	}
 	function getRecommendNews($num) {
-		//writeData("userId:".$userId);
+		// writeData("userId:".$userId);
+		// 当前无登陆
+		if (! $this->userId) {
+			$current_ip=getIp();
+			echo $current_ip;
+			//判断该ip存不存在
+			
+		}
 		echo $this->newsModel->getRecommendNews ( $this->userId, $num );
 	}
 	function getNewsByLabel($labelId, $num, $labelName) {
@@ -26,24 +33,34 @@ class NewsController {
 	function shareNews($news_id) {
 		echo $this->newsModel->shareNews ( $news_id, $this->userId );
 	}
-	
-	function removeStorageNews($news_id){
+	function removeStorageNews($news_id) {
 		echo $this->newsModel->removeStorageNews ( $news_id, $this->userId );
 	}
-	
-	function reportNews($news_id,$describe){
-		echo $this->newsModel->reportNews( $news_id, $this->userId,$describe );
+	function reportNews($news_id, $describe) {
+		echo $this->newsModel->reportNews ( $news_id, $this->userId, $describe );
 	}
-	
-	function store($news_ids){
-		//写入收藏表
-		$result=$this->newsModel->store($news_ids, 1,2);
+	function store($news_ids) {
+		// 写入收藏表
+		$result = $this->newsModel->store ( $news_ids, 1, 2 );
 	}
-	
-	function remove($news_ids){
-		//删除收藏表
-		$result=$this->newsModel->remove($news_ids, 1);
+	function remove($news_ids) {
+		// 删除收藏表
+		$result = $this->newsModel->remove ( $news_ids, 1 );
 	}
+}
+
+function getIp() {
+	if (getenv ( "HTTP_CLIENT_IP" ) && strcasecmp ( getenv ( "HTTP_CLIENT_IP" ), "unknown" ))
+		$ip = getenv ( "HTTP_CLIENT_IP" );
+	else if (getenv ( "HTTP_X_FORWARDED_FOR" ) && strcasecmp ( getenv ( "HTTP_X_FORWARDED_FOR" ), "unknown" ))
+		$ip = getenv ( "HTTP_X_FORWARDED_FOR" );
+	else if (getenv ( "REMOTE_ADDR" ) && strcasecmp ( getenv ( "REMOTE_ADDR" ), "unknown" ))
+		$ip = getenv ( "REMOTE_ADDR" );
+	else if (isset ( $_SERVER ['REMOTE_ADDR'] ) && $_SERVER ['REMOTE_ADDR'] && strcasecmp ( $_SERVER ['REMOTE_ADDR'], "unknown" ))
+		$ip = $_SERVER ['REMOTE_ADDR'];
+	else
+		$ip = "unknown";
+	return ($ip);
 }
 
 ?>
