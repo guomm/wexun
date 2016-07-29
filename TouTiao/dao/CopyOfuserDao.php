@@ -20,7 +20,7 @@ class UserDao {
 	function getUserInfo($userId) {
 		$res = $this->conn->query ( "select user_name,user_birthday,user_gender,user_label from user where user_id='" . $userId . "' limit 1 " );
 		if ($res)
-			return  json_encode ($res->fetch_assoc () );
+			return  json_encode($res->fetch_assoc ()) ;
 		return 0;
 	}
 	function registerUser($user) {

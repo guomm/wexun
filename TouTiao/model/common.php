@@ -13,6 +13,7 @@ function file_get_contents_utf8($fn) {
 }
 
 function getIp() {
+	$ip=0;
 	if (getenv ( "HTTP_CLIENT_IP" ) && strcasecmp ( getenv ( "HTTP_CLIENT_IP" ), "unknown" ))
 		$ip = getenv ( "HTTP_CLIENT_IP" );
 		else if (getenv ( "HTTP_X_FORWARDED_FOR" ) && strcasecmp ( getenv ( "HTTP_X_FORWARDED_FOR" ), "unknown" ))
@@ -22,8 +23,10 @@ function getIp() {
 				else if (isset ( $_SERVER ['REMOTE_ADDR'] ) && $_SERVER ['REMOTE_ADDR'] && strcasecmp ( $_SERVER ['REMOTE_ADDR'], "unknown" ))
 					$ip = $_SERVER ['REMOTE_ADDR'];
 					else
-						$ip = "unknown";
-						return ($ip);
+						$ip = 0;
+	
+						if($ip)$ip = sprintf('%u',ip2long($ip));
+						return $ip;
 }
 
 // 加密
@@ -54,5 +57,19 @@ function secret2string($sec) {
 	mcrypt_generic_deinit ( $td );
 	mcrypt_module_close ( $td );
 	return trim ( $string );
+}
+
+function str_n_pos($str, $n) {
+	if (! $n)
+		return 0;
+		$length = strlen ( $str );
+		$j = 0;
+		for($i = 0; $i <= $length; $i ++) {
+			if ($str {$i} == ',')
+				$j ++;
+				if ($j == $n)
+					return $i;
+		}
+		return $length;
 }
 ?>

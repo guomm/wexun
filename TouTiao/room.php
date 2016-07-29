@@ -132,6 +132,35 @@ switch ($type) {
 //$newsModel->store($news_id);
 //$newsModel->remove($news_id);
 
+//test login
+//testLogin();
+
+function  testLogin(){
+	$time1=microtime(true);
+	for($i=0;$i<50;$i++){
+		$ddserDao=new UserDao();
+		$ddserDao->login ("123","123");
+		$ddserDao->closeConn();
+	}
+	echo "time is ".(microtime(true)-$time1)." <br>";
+	
+	$time1=microtime(true);
+	for($i=0;$i<200;$i++){
+		$ddserDao=new UserDao();
+		$ddserDao->loginTest("123","123");
+		$ddserDao->closeConn();
+	}
+	echo "time is ".(microtime(true)-$time1)." <br>";
+	
+	$time1=microtime(true);
+	for($i=0;$i<200;$i++){
+		$ddserDao=new UserDao();
+		$ddserDao->login ("123","123");
+		$ddserDao->closeConn();
+	}
+	echo "time is ".(microtime(true)-$time1)." <br>";
+}
+
 function createcommendData(){
 	 $newsDao=new NewsDao();
 	 $userId=1;
