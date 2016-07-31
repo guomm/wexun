@@ -96,7 +96,8 @@ switch ($type) {
 	case "searchVal" :
 		$num = $_POST ["num"];
 		$offset = $_POST ["offset"];
-		$userModel->getSearchVal($num,$offset);
+		$search_val=$_POST ["search_val"];
+		$userModel->getSearchVal($num,$offset,$search_val);
 		break;
 	case "searchValCount" :
 		$search_val=$_POST ["search_val"];

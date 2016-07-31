@@ -85,8 +85,8 @@ class UserModel {
 		echo $this->userDao->getSearchValCount ( $search_val );
 		$this->userDao->closeConn();
 	}
-	function getSearchVal($num, $offset) {
-		echo $this->userDao->getSearchVal ( $num, $offset );
+	function getSearchVal($num, $offset,$search_val) {
+		echo $this->userDao->getSearchVal ( $num, $offset,$search_val );
 		$this->userDao->closeConn();
 	}
 	

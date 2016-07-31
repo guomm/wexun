@@ -97,16 +97,29 @@ class UserDao {
 		}
 		return 0;
 	}
-	function getSearchVal($num, $offset) {
+	function getSearchVal($num, $offset,$search_val) {
 		$sql = "select news_id,agency_name,news_title,news_time,news_imgs,news_img_num,news_abstract from news where news_title like '%" . $search_val . "%' order by news_time limit " . $offset . "," . $num;
 		$res = $this->conn->query ( $sql );
 		if ($res) {
-			return json_encode ( $res->fetch_all ( MYSQLI_ASSOC ) );
+			return  $res->fetch_all ( MYSQLI_ASSOC );
 		}
 		return 0;
 	}
 	function closeConn() {
 		closeConnection ( $this->conn );
+	}
+	
+	function getStorageByUserId($userId){
+		$res = $this->conn->query ( "select user_storage_news from userbehavior where user_id='" . $userId . "' limit 1 " );
+		if ($res->num_rows) {
+			$storage = $res->fetch_assoc () ["user_storage_news"];
+			return $storage;
+		}
+		return 0;
+	}
+	
+	function __destruct(){
+		$this->closeConn();
 	}
 }
 ?>

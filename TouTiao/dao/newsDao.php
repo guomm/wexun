@@ -3,7 +3,7 @@ require_once ("dao/commonDao.php");
 class NewsDao {
 	private $conn;
 	function __construct() {
-		$this->conn = createConnection();
+		$this->conn = createConnection ();
 		if (! $this->conn) {
 			echo "Could not connect: " . CommonDao::$conn->connect_error;
 		}
@@ -35,7 +35,7 @@ class NewsDao {
 		return 0;
 	}
 	function writeScanRecord($userId, $newsIds, $clickLabel) {
-		//writeData("newsIds".$newsIds."  userId:".$userId);
+		// writeData("newsIds".$newsIds." userId:".$userId);
 		$sql = "insert into userscans(user_id,news_id,scan_time,news_click_label) values";
 		foreach ( $newsIds as $newsId ) {
 			$sql = $sql . "('" . $userId . "','" . $newsId . "','" . date ( "Y-m-d H:i:s" ) . "','" . $clickLabel . "'),";
@@ -57,7 +57,7 @@ class NewsDao {
 	function addNewsLabel($label_id, $news_id, $time) {
 		$sql = "insert into newslabel(news_id,label_id,add_news_time) values('" . $news_id . "','" . $label_id . "','" . $time . "')";
 		$res = $this->conn->query ( $sql );
-		if ($res&&$res->num_rows)
+		if ($res && $res->num_rows)
 			return 1;
 		return 0;
 	}
@@ -170,21 +170,27 @@ class NewsDao {
 	}
 	function addUser($ip) {
 		$sql = "insert into user(user_ip)values('" . $ip . "')";
-		//echo $sql;
+		// echo $sql;
 		$res = $this->conn->query ( $sql );
 		if ($res) {
 			$userId = $this->conn->insert_id;
-		//	echo "last userId:".$userId."<br>";
+			// echo "last userId:".$userId."<br>";
 			return $userId;
 		}
 		return 0;
 	}
-	
 	function closeConn() {
-		if($this->conn)closeConnection ( $this->conn );
-		//else writeData($this->conn->sqlstate);
+		if ($this->conn)
+			closeConnection ( $this->conn );
+		// else writeData($this->conn->sqlstate);
 	}
-	
+	function getNewsByIds($newsIds) {
+		$sql = "select news_id,agency_name,news_title,news_time,news_imgs,news_img_num,news_abstract from news where news_id in (" . $newsIds . ")";
+		$newsS = $this->conn->query ( $sql );
+		if ($newsS)
+			return $newsS->fetch_all ( MYSQLI_ASSOC );
+		return 0;
+	}
 }
 
 ?>
