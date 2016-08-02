@@ -15,14 +15,24 @@ class NewsDao {
 			return 1;
 		return 0;
 	}
-	function getRecommendNews($userId) {
-		$sql = "select news_id from newsrecommend where user_id= '" . $userId . "' limit 1";
+	function getRecommendNews($userId, $num) {
+		$sql = "select news_id from newsrecommend where user_id= '" . $userId . "'";
 		$res = $this->conn->query ( $sql );
-		if ($res->num_rows) {
-			$newsIds = $res->fetch_assoc () ["news_id"];
-			return explode ( ",", $newsIds );
+		$newsIds = $res->fetch_assoc () ["news_id"];
+		$pos = str_n_pos ( $newsIds, $num );
+		$remain = '';
+		if ($pos) {
+			$remain = substr ( $newsIds, $pos + 1 );
+			$newsIds = substr ( $newsIds, 0, $pos );
 		}
-		return array ();
+		$sql = "update newsrecommend  set news_id = '" . $remain . "' where user_id =  '" . $userId . "'";
+		$delete_result = $this->conn->query ( $sql );
+		
+		$sql = "select news_id,agency_name,news_title,news_time,news_imgs,news_img_num,news_abstract from news where news_id in (" . $newsIds . ")";
+		$newsS = $this->conn->query ( $sql );
+		if ($newsS)
+			return $newsS->fetch_all ( MYSQLI_ASSOC );
+		return 0;
 	}
 	function writeScanRecord($userId, $newsIds, $clickLabel) {
 		// writeData("newsIds".$newsIds." userId:".$userId);
@@ -36,12 +46,11 @@ class NewsDao {
 			return 1;
 		return 0;
 	}
-	function getNewsByLabel($labelId, $num) {
-		$sql = "select news_id from newslabel where label_id='" . $labelId . "' order by add_news_time limit " . $num;
-		echo $sql;
+	function getNewsByLabel($labelId, $offset, $num) {
+		$sql = "select a.news_id,a.agency_name,a.news_title,a.news_time,a.news_imgs,a.news_img_num,a.news_abstract from news as a INNER JOIN " . "(select news_id from newslabel  where label_id='" . $labelId . "' ORDER BY add_news_time limit " . $offset . "," . $num . ") as b on a.news_id =b.news_id ";
 		// writeData($sql);
 		$res = $this->conn->query ( $sql );
-		if ($res && $res->num_rows)
+		if ($res)
 			return $res->fetch_all ( MYSQLI_ASSOC );
 		return 0;
 	}
@@ -112,8 +121,8 @@ class NewsDao {
 			return 1;
 		return 0;
 	}
-	function addOneRecommendNum($news_id,$val) {
-		$sql = "update newsrecord set news_recommend_num=news_recommend_num+".$val." where news_id='" . $news_id . "'";
+	function addOneRecommendNum($news_id) {
+		$sql = "update newsrecord set news_recommend_num=news_recommend_num+1 where news_id='" . $news_id . "'";
 		$res = $this->conn->query ( $sql );
 		if ($res)
 			return 1;
@@ -176,64 +185,10 @@ class NewsDao {
 		// else writeData($this->conn->sqlstate);
 	}
 	function getNewsByIds($newsIds) {
-		$sql = "select news_id,agency_name,news_title,news_time,news_imgs,news_img_num,news_abstract,news_data from news where news_id in (" . $newsIds . ")";
+		$sql = "select news_id,agency_name,news_title,news_time,news_imgs,news_img_num,news_abstract from news where news_id in (" . $newsIds . ")";
 		$newsS = $this->conn->query ( $sql );
 		if ($newsS)
 			return $newsS->fetch_all ( MYSQLI_ASSOC );
-		return 0;
-	}
-	function recommendNews($news_id, $userId) {
-		$sql = "update  userbehavior  set user_reocmmend_news=concat(user_reocmmend_news,'" . $news_id . "') where user_id='" . $userId . "' ";
-		$newsS = $this->conn->query ( $sql );
-		if ($newsS)
-			return 1;
-		return 0;
-	}
-	function storageNews($news_id, $userId) {
-		$sql = "update  userbehavior  set user_storage_news=concat(user_storage_news,';" . time () . "," .  $news_id. "') where user_id='" . $userId . "' ";
-		$newsS = $this->conn->query ( $sql );
-		if ($newsS)
-			return 1;
-		return 0;
-	}
-	function removeRecomm($news_id, $userId) {
-		$sql = "select user_reocmmend_news from userbehavior where user_id='" . $userId . "'";
-		$newsS = $this->conn->query ( $sql );
-		if ($newsS->num_rows) {
-			$newsIds = $newsS->fetch_assoc () ["user_reocmmend_news"];
-			$newsIds = explode ( ",", $newsIds );
-			$result = '';
-			foreach ( $newsIds as $temp ) {
-				if ($temp != $news_id)
-					$result = $result . $temp . ",";
-			}
-			if(strlen($result))$result=substr($result, 0,-1);
-			$sql = "update  userbehavior  set user_reocmmend_news='" . $result . "' where user_id='" . $userId . "' ";
-			$newsS = $this->conn->query ( $sql );
-			if ($newsS)
-				return 1;
-			return 0;
-		}
-		return 0;
-	}
-	function removeStorage($news_id, $userId) {
-		$sql = "select user_storage_news from userbehavior where user_id='" . $userId . "'";
-		$newsS = $this->conn->query ( $sql );
-		if ($newsS->num_rows) {
-			$newsIds = $newsS->fetch_assoc () ["user_storage_news"];
-			$newsIds = explode ( ";", $newsIds );
-			$result = '';
-			foreach ( $newsIds as $temp ) {
-				if (explode ( ",", $temp )[1] != $news_id)
-					$result = $result . $temp . ";";
-			}
-			if(strlen($result))$result=substr($result, 0,-1);
-			$sql = "update  userbehavior  set user_storage_news='" . $result . "' where user_id='" . $userId . "' ";
-			$newsS = $this->conn->query ( $sql );
-			if ($newsS)
-				return 1;
-				return 0;
-		}
 		return 0;
 	}
 }
