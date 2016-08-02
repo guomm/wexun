@@ -1,6 +1,6 @@
 <?php
 require_once ("bean/user.php");
-require_once ("dao/commonDao.php");
+require_once ("dao/common.php");
 class UserDao {
 	private $conn;
 	function __construct() {

@@ -1,11 +1,10 @@
 <?php
-require_once ("model/userModel.php");
-require_once ("model/newsModel.php");
-//include ("bean/user.php");
+require_once ("model/controller.php");
+
 session_start();
 ini_set('session.gc_maxlifetime', 3600);
-$userModel=new UserModel();
-$newsModel=new NewsModel();
+// 1 is redis
+$controller=new Controller(1);
 
 $type = $_POST ["type"];
 //writeData($type);
@@ -15,7 +14,7 @@ switch ($type) {
 		$password = $_POST ["password"];
 		$rememberMe=$_POST ["remember_me"];
 		//writeData($userName."   ".$password);
-		$userModel->login ($userName,$password,$rememberMe);
+		$controller->login ($userName,$password,$rememberMe);
 		break;
 	case "register" :
 		$userName = $_POST ["user_name"];
@@ -25,55 +24,53 @@ switch ($type) {
 		$account = $_POST ["user_account"];
 		$interest = $_POST ["interest"];
 		$user=new User($userName, $gender, $account, $birthday, $interest,$password);
-		$userModel->register ($user);
-		
+		$controller->register ($user);
 		break;
 	case "checkAccount" :
 		$userAccount = $_POST ["userAccount"];
-		$userModel->checkAccount($userAccount);
+		$controller->checkAccount($userAccount);
 		break;
 	case "getRecommendNews" :
 		$num = $_POST ["num"];
-		$newsModel->getRecommendNews($num);
+		$controller->getRecommendNews($num);
 		break;
 	case "getNewsByLabel" :
 		$num = $_POST ["num"];
 		$labelId = $_POST ["labelId"];
 		$labelName=$_POST ["labelName"];
-		$newsModel->getNewsByLabel($labelId,$num,$labelName);
+		$controller->getNewsByLabel($labelId,$num,$labelName);
 		break;
 	case "getDetailNews" :
 		$news_id = $_POST ["news_id"];
-		$newsModel->getDetailNews($news_id);
+		$controller->getDetailNews($news_id);
 		break;
 	case "recommendNews" :
 		$news_id = $_POST ["news_id"];
 		$newsModel->recommendNews($news_id);
 		break;
 	case "shareNews" :
-		$news_id = $_POST ["news_id"];
-		$newsModel->shareNews($news_id);
+		//$news_id = $_POST ["news_id"];
+		//$controller->shareNews($news_id);
 		break;
 	case "storageNews" :
 		$news_id = $_POST ["news_id"];
-		$newsModel->storageNews($news_id);
+		$controller->storageNews($news_id);
 		break;
 	case "removeStorageNews" :
 		$news_id = $_POST ["news_id"];
-		$newsModel->removeStorageNews($news_id);
+		$controller->removeStorage($news_id);
 		break;
 	case "removeRecommendNews" :
-		//$news_id = $_POST ["news_id"];
-		//$newsModel->removeStorageNews($news_id);
-		echo 1;
+		$news_id = $_POST ["news_id"];
+		$controller->removeRecomm($news_id);
 		break;
 	case "reportNews" :
 		$news_id = $_POST ["news_id"];
 		$describe = $_POST ["describe"];
-		$newsModel->reportNews($news_id,$describe);
+		$controller->reportNews($news_id,$describe);
 		break;
 	case "getUserById" :
-		$userModel->getUserById();
+		$controller->getUserById();
 		break;
 		
 	case "updateUser" :
@@ -82,29 +79,29 @@ switch ($type) {
 		$gender = $_POST ["gender"];
 		$interest = $_POST ["interest"];
 		$user=new User($userName, $gender, $account, $birthday, $interest,$password);
-		$userModel->updateUser ($user);
-		//echo 1;
+		$controller->updateUser ($user);
 		break;
 	case "getStorageById" :
 		$num = $_POST ["num"];
 		$offset = $_POST ["offset"];
-		$userModel->getStorageById($num,$offset);
+		$controller->getUserStorage($num,$offset);
 		break;
 	case "getStoragePageCount" :
-		$userModel->getStoragePageCount();
+		$controller->getStoragePageCount();
 		break;
 	case "searchVal" :
 		$num = $_POST ["num"];
 		$offset = $_POST ["offset"];
 		$search_val=$_POST ["search_val"];
-		$userModel->getSearchVal($num,$offset,$search_val);
+		$pageCount=$_POST ["pageCount"];
+		$controller->getSearchVal($num,$offset,$search_val,$pageCount);
 		break;
 	case "searchValCount" :
 		$search_val=$_POST ["search_val"];
-		$userModel->getSearchValCount($search_val);
+		$controller->getSearchValCount($search_val);
 		break;
 	case "logout" :
-		$userModel->logout();
+		$controller->logout();
 		break;
 }
 //test unlogin

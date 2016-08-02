@@ -1,5 +1,5 @@
 <?php
-require_once ("dao/commonDao.php");
+require_once ("dao/common.php");
 class NewsDao {
 	private $conn;
 	function __construct() {

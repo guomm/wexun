@@ -1,41 +1,10 @@
 <?php
-require 'userDao.php';
-require 'newsDao.php';
-class RedisDao {
-	private $redis;
-	private $userDao;
-	private $newsDao;
-	private $userId;
-	static $userInfoOutTime = 600;
-	static $userStorageOutTime = 600;
-	static $newsOutTime = 7200;
-	static $searchOutTime = 7200;
-	static $tempOutTime = 3;
-	static $userRecomm=1200;
-	static $scanOutTime=1200;
-	static $newsContentOutTime=7200;
-	function __construct() {
-		$this->redis = new Redis ();
-		$this->redis->connect ( '127.0.0.1', 6379 );
-		if ($_SESSION ["userId"])
-			$this->userId = secret2string ( $_SESSION ["userId"] );
+class CommonModel {
+	private $dao;
+	function __construct($dao) {
+		$this->dao = $dao;
 	}
-	function pingRedis(){
-		if("+PONG"==$this->redis->ping()) return 1;
-		return 0;
-	}
-	function getUserDao() {
-		if (! $this->userDao) {
-			$this->userDao = new UserDao ();
-		}
-		return $this->userDao;
-	}
-	function getNewsDao() {
-		if (! $this->newsDao) {
-			$this->newsDao = new NewsDao ();
-		}
-		return $this->newsDao;
-	}
+	
 	function getUserById($userId) {
 		$result = $this->redis->hGetAll ( "user:" . $userId );
 		if (! $result) {

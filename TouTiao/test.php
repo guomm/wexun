@@ -1,13 +1,17 @@
 <?php    
-require 'dao/redisDao.php';
-require 'model/common.php';
- $redisDao=new RedisDao();
+//require 'dao/redisDao.php';
+//require 'model/common.php';
+ //$redisDao=new RedisDao();
 //$redisDao->test();
 //print_r($redisDao->getUserStorage(1,10,0)) ;
 // print_r( $redisDao->getSearchVal("瓶梅",210,10));
  //print_r($redisDao->getNewsByLabel(100, 60, "science", 1));
  //print_r($redisDao->getDetailNews(580));
- $redisDao->removeRecomm(394, 1);
+ //$redisDao->removeRecomm(394, 1);
+// echo $redisDao->pingRedis();
+$a="a;b;c;";
+		echo mb_substr_count( $a,";");
+
  //echo time();
 // echo "get :".$redisDao->getUserById(1);
 // echo "hh :".$redisDao->getUserById(1);

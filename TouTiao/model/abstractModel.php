@@ -1,0 +1,88 @@
+<?php
+require_once "dao/abstractDao.php";
+
+abstract class AbstractModel {
+	protected $dao;
+	function __construct($dao) {
+		$this->dao = $dao;
+	}
+	function login($userAccount, $password, $rememberMe) {
+		$result = $this->dao->login ( md5 ( $userAccount ), md5 ( $password ) );
+		if ($result) {
+			$user_info = json_decode ( $result );
+			$_SESSION ["userId"] = string2secret ( $user_info->user_id );
+			$_SESSION ["userName"] = $user_info->user_name;
+			setcookie ( "userId", string2secret ( $user_info->user_id ) );
+			setcookie ( "userName", $user_info->user_name );
+			setcookie ( "userAccount", $userAccount );
+			if (count ( $rememberMe )) {
+				setcookie ( "password", $password );
+			} else {
+				setcookie ( "password", "" );
+			}
+		}
+		return $result;
+	}
+	function register($user) {
+		$user->account = md5 ( $user->account );
+		$user->password = md5 ( $user->password );
+		$num = count ( $user->interest );
+		$val = 0;
+		for($i = 0; $i < $num; ++ $i) {
+			$val += $user->interest [$i];
+		}
+		$user->interest = $val;
+		return $this->dao->registerUser ( $user );
+	}
+	
+	function checkAccount($userAccount) {
+		$result = $this->dao->checkUserAccount ( md5 ( $userAccount ) );
+		$returnVal = '';
+		if ($result)
+			$returnVal = 'false';
+		else
+			$returnVal = 'true';
+		return $returnVal;
+	}
+	function recommendNews($news_id, $userId) {
+		// 写入推荐事件
+		$result = $this->dao->recommendNews ( $news_id, $userId );
+		// 更改新闻推荐个数
+		$this->dao->addOneRecommendNum ( $news_id, 1 );
+		return $result;
+	}
+	function storageNews($news_id, $userId) {
+		// 写入收藏事件
+		return $this->dao->storageNews ( $news_id, $userId );
+	}
+	function removeStorage($news_id,$userId) {
+		return $this->dao->removeStorage ( $news_id, $userId );
+	}
+	function removeRecomm($news_id, $userId) {
+		$result = $this->dao->removeRecomm ( $news_id, $userId );
+		// 更改新闻推荐个数
+		$this->dao->addOneRecommendNum ( $news_id, - 1 );
+		return $result;
+	}
+	function reportNews($news_id, $describe, $userId) {
+		echo $this->getNewsDao ()->reportNews ( $news_id, $userId, $describe );
+	}
+	function logout() {
+		unset ( $_SESSION ['userId'] );
+		unset ( $_SESSION ['userName'] );
+		setcookie ( "userId", '', time () - 3600 );
+		setcookie ( "userName", '', time () - 3600 );
+		echo 1;
+	}
+	abstract function updateUser($user);
+	abstract function getUserById($userId);
+	abstract function getStorageById($userId, $num, $offset);
+	abstract function getStoragePageCount($userId);
+	abstract function getSearchValPageCount($search_val);
+	abstract function getSearchVal($search_val, $offset, $num, $pageCount);
+	abstract function getRecommendNews($num);
+	abstract function getDetailNews($news_id);
+	abstract function getStorageById($userId, $num, $offset);
+	abstract function getNewsByLabel($labelId, $num, $labelName);
+}
+?>
