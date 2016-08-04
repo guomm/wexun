@@ -1,6 +1,10 @@
 <?php
-// require 'dao/redisDao.php';
-// require 'model/common.php';
+require 'model/common.php';
+require_once 'model/constant.php';
+require 'dao/abstractDao.php';
+ require 'dao/redisDao.php';
+
+
 // $redisDao=new RedisDao();
 // $redisDao->test();
 // print_r($redisDao->getUserStorage(1,10,0)) ;
@@ -12,10 +16,13 @@
 // $a="a;b;c;";
 // echo mb_substr_count( $a,";");
 
-require 'model/constant.php';
-echo time();
-echo "<br>";
-echo time()+cookieTime;
+// require 'model/constant.php';
+// echo time();
+// echo "<br>";
+// echo time()+cookieTime;
+// echo "<br>";
+// echo session_id()."  u<br>";
+// echo $_COOKIE["PHPSESSID"];
 // echo "$sessionTime    $cookieTime <br>";
 // //$xml = simplexml_load_string(configure);
 // print_r($xml);
@@ -29,40 +36,65 @@ echo time()+cookieTime;
 	
 // $login = (string) $xml->login;//在做数据比较时，注意要先强制转换
 // print_r($login);
+//$a="dsadads\tfdfdsfdsf\r\nfdfdsfdf\r\nhh";
+//writeData($a);
+//require 'model/writeToDisk.php';
+ updateData();
 
-// $redis = new Redis ();
-// $redis->connect ( '127.0.0.1', 6379 );
-
-// $userIds = array (
-// 		"17",
-// 		"1" 
-// );
-// $labels = array (
-// 		"default",
-// 		"science"
-// );
-// $num = 227;
-
-// resetUserRecomm ($redis, $userIds, $num );
-// resetLabel($redis,$labels,$num);
-
-
-
-
-// function resetUserRecomm($redis, $userIds, $num) {
-// 	foreach ( $userIds as $userId ) {
-// 		$redis->set ( "recomUpdate:" . $userId, $num );
-// 		$redis->del ( "scan:" . $userId );
-// 	}
+// $result=$redis->keys("news:*");
+// print_r($result);
+// echo "<br>";
+// foreach ($result as $tempKey){
+// 	$temp=$redis->hGetAll($tempKey);
+// 	print_r($temp);
+// 	echo "<br>";
 // }
 
-// function resetLabel($redis, $labels, $num){
-// 	foreach ( $labels as $labelTemp ) {
-// 		$key=$labelTemp . ":update";
-// 		echo $key."<br>";
-// 		$redis->set ($key, $num );
-// 	}
-// }
+function updateData(){
+	$redis = new Redis ();
+	$redis->connect ( '127.0.0.1', 6379 );
+	$userIds = array (
+			"21",
+			"1"
+	);
+	$labels = array (
+			"def",
+			"sc"
+	);
+	$num = 227;
+	
+	resetUserRecomm ($redis, array(1), $num );
+	resetLabel($redis,$labels,$num,$userIds);
+}
+
+
+
+
+
+function resetUserRecomm($redis, $userIds, $num) {
+	foreach ( $userIds as $userId ) {
+		$redis->set ( "recu:" . $userId, $num );
+	//	$redis->del ( "scan:" . $userId );
+	}
+}
+
+function resetLabel($redis, $labels, $num,$userIds){
+	foreach ( $labels as $labelTemp ) {
+		foreach ($userIds as $userId){
+			$key=$labelTemp .$userId. ":u";
+			echo $key."<br>";
+			$redis->set ($key, $num );
+		}
+		
+	}
+	$reidsDao=new RedisDao();
+	$result = $reidsDao->getNewsByLabel ( 100, 0,227 );
+				$redis->pipeline ();
+				foreach ( $result as $newsId ) {
+					$redis->lPush (  "def:v", $newsId ["news_id"] );
+				}
+		$redis->exec ();
+}
 
 // $a="\$redis->zAdd('userStorage:1',55,380,18,380,23,381,323,382,2323,383,10323,384,12123,385,12313,386,12332,388,632,388,532,389,4332,390,32,391);";
 // eval($a);

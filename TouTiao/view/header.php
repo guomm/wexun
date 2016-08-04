@@ -97,8 +97,8 @@ $("#logout").on("click",function(event){
     			$("#loginbut").show();
     			location.reload();
         	},  
-        	error:function(){
-            	
+        	error:function(data){
+            	console.log(data);
         	}
         		
         });

@@ -7,6 +7,8 @@ require_once ("model/controller.php");
 
 session_start();
 ini_set('session.gc_maxlifetime', sessionTime);
+
+//writeData("sessionId:".session_id()." cookieId:".$_COOKIE["PHPSESSID"]);
 //$_SESSION["default"]=0;
 //$_SESSION["science"]=0;
 // 1 is redis

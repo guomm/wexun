@@ -9,12 +9,12 @@ class Controller {
 		if($type ==1){
 			//redis
 			$dao=new RedisDao();
-			$ip="127.0.0.1";
-			$port=6379;
-			$this->model=new RedisModel ($dao,$ip,$port);
+			//$ip="127.0.0.1";
+			//$port=6379;
+			$this->model=new RedisModel ($dao,redisIP,redisPort);
 		}
 		if ($_SESSION ["userId"])
-			$this->userId = secret2string ( $_SESSION ["userId"] );
+			$this->userId = $_SESSION ["userId"];
 	}
 	
 	//function login
@@ -54,7 +54,7 @@ class Controller {
 	
 	function getRecommendNews($num) {
 		
-		//$result= ;
+		//$result= $this->model->getRecommendNews($num, $this->userId);
 		//writeData(json_encode($result));
 		echo json_encode($this->model->getRecommendNews($num, $this->userId));
 		

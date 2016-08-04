@@ -18,13 +18,13 @@
     <div class="container" id="con">
 		<div class="col-sm-2 text-center">
 			<ul class="list-unstyled category">
-				<li><a href="#0" id="recomm"><img src="../images/recomment.svg">推荐</a></li>
-				<li><a href="#0" id="hot"><img src="../images/hot.svg">热点</a></li>
-				<li><a href="#0" id="science"><img src="../images/science.svg">科技</a></li>
-				<li><a href="#0" id="enjoy"><img src="../images/enjoy.svg">娱乐</a></li>
-				<li><a href="#0" id="money"><img src="../images/money.svg">财经</a></li>
-				<li><a href="#0" id="physical"><img src="../images/physical.svg">体育</a></li>
-				<li><a href="#0" id="car"><img src="../images/car.svg">汽车</a></li>
+				<li><a  href="#0" id="recomm"><img src="../images/recomment.svg">推荐</a></li>
+				<li><a  href="#0" id="hot"><img src="../images/hot.svg">热点</a></li>
+				<li><a  href="#0" id="science"><img src="../images/science.svg">科技</a></li>
+				<li><a  href="#0" id="enjoy"><img src="../images/enjoy.svg">娱乐</a></li>
+				<li><a  href="#0" id="money"><img src="../images/money.svg">财经</a></li>
+				<li><a  href="#0" id="physical"><img src="../images/physical.svg">体育</a></li>
+				<li><a  href="#0" id="car"><img src="../images/car.svg">汽车</a></li>
 			</ul>
 		</div>
 		<div class="col-sm-10" id="tmp"></div>
@@ -116,7 +116,7 @@ $("#science").on('click', function(event){
 	$("#car").removeClass("bg-click");
 	$("#physical").removeClass("bg-click");
 
-	loadData("getNewsByLabel",1,"science",15,0);
+	loadData("getNewsByLabel",1,"sc",15,0);
 });
 
 
@@ -177,32 +177,32 @@ $("#physical").on('click', function(event){
 	$("#car").removeClass("bg-click");
 	$("#recomm").removeClass("bg-click");
 
-	loadData("getNewsByLabel",6,"physical",15,0);
+	loadData("getNewsByLabel",6,"phy",15,0);
 });
 
 
 function loadDataNoPic(data){
-	return "<div class='clearfix news-item '><div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
-			"<a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
+	return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
+			"<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
 			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
 }
 
 function loadDataOnePic(data){
-	return "<div class='clearfix news-item '><div class='pull-left'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'><img class='feedimg' src='"+data.news_imgs+"' alt='图片'>" +
-			"</a></div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
-			"<a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
+	return "<div class='clearfix news-item '><div class='pull-left'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'><img class='feedimg' src='"+data.news_imgs+"' alt='图片'>" +
+			"</a></div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
+			"<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
 			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
 }
 function loadDataThreePic(data){
 	var imgs = data.news_imgs.split(';');
-	return "<div class='clearfix news-item '><div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='image-list clearfix'>"+
-					"<a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
+	return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='image-list clearfix'>"+
+					"<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
 						"<div class='night-image'"+
 							"style='background-image: url("+imgs[0]+")'></div>"+
-					"</a> <a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
+					"</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
 						"<div class='night-image'"+
 							"style='background-image: url("+imgs[1]+")'></div>"+
-					"</a> <a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
+					"</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
 						"<div class='night-image'"+
 							"style='background-image: url("+imgs[2]+")'></div>"+
 					"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
