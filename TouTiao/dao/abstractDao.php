@@ -101,7 +101,7 @@ function login($userAccount, $password) {
 	}
 	
 	function recommendNews($news_id, $userId) {
-		$sql = "update  userbehavior  set user_reocmmend_news=concat(user_reocmmend_news,'" . $news_id . "') where user_id='" . $userId . "' ";
+		$sql = "update  userbehavior  set user_reocmmend_news=concat(user_reocmmend_news,'," . $news_id . "') where user_id='" . $userId . "' ";
 		$newsS = $this->conn->query ( $sql );
 		if ($newsS)
 			return 1;
@@ -198,7 +198,7 @@ function login($userAccount, $password) {
 		closeConnection ( $this->conn );;
 	}
 	
-	abstract function getStorageById($userId, $num, $offset);
+	abstract function getStorageByUserId($userId, $num, $offset);
 	abstract function getRecommendNews($userId,$offset,$num);
 	abstract function getNewsByLabel($labelId,$offset, $num);
 	

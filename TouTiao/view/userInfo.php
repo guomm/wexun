@@ -103,13 +103,13 @@ $("#user_info").on('click', function(event){
 	    	    		"<div class='form-group'>"+
 	    	    			"<label for='ff-repsw' class='col-md-3 control-label'>爱好</label> <label "+
 	    	    				"class='checkbox-inline col-md-1 checkbox-type'> <input "+
-	    	    				"type='checkbox' name='interest'  value='1' "+sport+"> 运动"+
+	    	    				"type='checkbox' name='interest[]'  value='1' "+sport+"> 运动"+
 	    	    			"</label> <label class='checkbox-inline col-md-1'> <input "+
-	    	    			"	type='checkbox' name='interest'  value='10' "+music+"> 音乐"+
+	    	    			"	type='checkbox' name='interest[]'  value='10' "+music+"> 音乐"+
 	    	    			"</label> <label class='checkbox-inline col-md-1'> <input "+
-	    	    			"	type='checkbox' name='interest'  value='100' "+group+"> 军事"+
+	    	    			"	type='checkbox' name='interest[]'  value='100' "+group+"> 军事"+
 	    	    			"</label> <label class='checkbox-inline col-md-1'> <input "+
-	    	    				"type='checkbox' name='interest'  value='1000' "+money+"> 财经"+
+	    	    				"type='checkbox' name='interest[]'  value='1000' "+money+"> 财经"+
 	    	    			"</label>"+
 	    	    			"<p class='col-md-4 form-control-static text-danger'></p>"+
 	    	    		"</div>"+

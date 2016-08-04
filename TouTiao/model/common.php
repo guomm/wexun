@@ -14,7 +14,20 @@ function closeConnection($conn) {
 
 function writeData($data) {
 	$file = fopen ( "D://tt.txt", "a" );
-	fwrite ( $file, $data );
+	if(is_array($data)){
+		foreach ($data as $temp){
+			if(is_array($temp)){
+				foreach ($temp as $temp1)
+				fwrite ( $file, $temp1 );
+			}else{
+				fwrite ( $file, $temp );
+			}
+		}
+		
+	}else{
+		fwrite ( $file, $data );
+	}
+	
 	fclose ( $file );
 }
 function file_get_contents_utf8($fn) {

@@ -1,6 +1,6 @@
 <?php
 class RedisDao extends AbstractDao {
-	function getStorageById($userId, $num, $offset) {
+	function getStorageByUserId($userId, $num, $offset) {
 		$res = $this->conn->query ( "select user_storage_news from userbehavior where user_id='" . $userId . "' limit 1 " );
 		if ($res->num_rows) {
 			$storage = $res->fetch_assoc () ["user_storage_news"];
@@ -21,7 +21,7 @@ class RedisDao extends AbstractDao {
 	
 	function getNewsByLabel($labelId,$offset, $num) {
 		$sql = "select news_id from newslabel where label_id='" . $labelId . "' order by add_news_time limit " . $num;
-		echo $sql;
+		//echo $sql;
 		// writeData($sql);
 		$res = $this->conn->query ( $sql );
 		if ($res && $res->num_rows)

@@ -101,6 +101,6 @@ $("#logout").on("click",function(event){
         	}
         		
         });
-	
+	location.reload();
 });
 </script>

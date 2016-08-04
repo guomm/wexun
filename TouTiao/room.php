@@ -3,9 +3,10 @@ require_once ("model/controller.php");
 
 session_start();
 ini_set('session.gc_maxlifetime', 3600);
+$_SESSION["default"]=0;
+$_SESSION["science"]=0;
 // 1 is redis
 $controller=new Controller(1);
-
 $type = $_POST ["type"];
 //writeData($type);
 switch ($type) {
@@ -46,7 +47,7 @@ switch ($type) {
 		break;
 	case "recommendNews" :
 		$news_id = $_POST ["news_id"];
-		$newsModel->recommendNews($news_id);
+		$controller->recommendNews($news_id);
 		break;
 	case "shareNews" :
 		//$news_id = $_POST ["news_id"];
@@ -78,7 +79,8 @@ switch ($type) {
 		$birthday = $_POST ["birthday"];
 		$gender = $_POST ["gender"];
 		$interest = $_POST ["interest"];
-		$user=new User($userName, $gender, $account, $birthday, $interest,$password);
+		writeData("len:".count($interest));
+		$user=new User($userName, $gender, "", $birthday, $interest,"");
 		$controller->updateUser ($user);
 		break;
 	case "getStorageById" :
@@ -94,7 +96,7 @@ switch ($type) {
 		$offset = $_POST ["offset"];
 		$search_val=$_POST ["search_val"];
 		$pageCount=$_POST ["pageCount"];
-		$controller->getSearchVal($num,$offset,$search_val,$pageCount);
+		$controller->getSearchVal($search_val,$offset,$num,$pageCount);
 		break;
 	case "searchValCount" :
 		$search_val=$_POST ["search_val"];

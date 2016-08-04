@@ -64,25 +64,23 @@ abstract class AbstractModel {
 		$this->dao->addOneRecommendNum ( $news_id, - 1 );
 		return $result;
 	}
-	function reportNews($news_id, $describe, $userId) {
-		echo $this->getNewsDao ()->reportNews ( $news_id, $userId, $describe );
+	function reportNews($news_id, $userId,$describe) {
+		echo $this->dao->reportNews ( $news_id, $userId,$describe );
 	}
 	function logout() {
-		unset ( $_SESSION ['userId'] );
-		unset ( $_SESSION ['userName'] );
+		session_destroy();
 		setcookie ( "userId", '', time () - 3600 );
 		setcookie ( "userName", '', time () - 3600 );
 		echo 1;
 	}
-	abstract function updateUser($user);
+	abstract function updateUser($user,$userId);
 	abstract function getUserById($userId);
 	abstract function getStorageById($userId, $num, $offset);
 	abstract function getStoragePageCount($userId);
 	abstract function getSearchValPageCount($search_val);
 	abstract function getSearchVal($search_val, $offset, $num, $pageCount);
-	abstract function getRecommendNews($num);
-	abstract function getDetailNews($news_id);
-	abstract function getStorageById($userId, $num, $offset);
-	abstract function getNewsByLabel($labelId, $num, $labelName);
+	abstract function getRecommendNews($num,$userId);
+	abstract function getDetailNews($news_id,$userId);
+	abstract function getNewsByLabel($labelId, $num, $labelName,$userId);
 }
 ?>

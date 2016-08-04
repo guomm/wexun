@@ -43,7 +43,7 @@ class RedisModel extends AbstractModel{
 		);
 		if ($result) {
 			$this->redis->hMset ( "user:" . $userId, $userChanges );
-			$this->redis->expire ( "user:" . $userId, slef::$userInfoOutTime );
+			$this->redis->expire ( "user:" . $userId, self::$userInfoOutTime );
 		}
 		return $result;
 	}
@@ -58,13 +58,15 @@ class RedisModel extends AbstractModel{
 			// echo "no userStorageIds" . $userId;
 			// print_r($userStorageIds);
 			// redis中不存在用户的收藏，从本地数据库中取出
-			$userStorage = $this->dao->getStorageByUserId ( $userId );
+			$userStorage = $this->dao->getStorageByUserId ( $userId,$num, $offset );
 			// echo "dbuserStorage:" . $userStorage . "<br>";
 			if ($userStorage) {
 				$find1 = ";";
 				$replace = ",";
 				// 将取出的数据放入redis,数据库中的数据存储格式为 storagetime,newsId;storagetime,newsId
 				// $userStorage
+				//去掉开始的；
+				$userStorage=substr($userStorage, 1);
 				$userStorage = str_replace ( $find1, $replace, $userStorage );
 				// echo "dbuserStorage:".$userStorage."<br>";
 				$this->redis->pipeline ();
@@ -101,6 +103,7 @@ class RedisModel extends AbstractModel{
 			$unexistNewsIds = substr ( $unexistNewsIds, 0, - 1 );
 			
 			$newssDb = $this->dao->getNewsByIds ( $unexistNewsIds );
+			writeData($newssDb);
 			// print_r($newssDb);
 			// echo "<br>";
 			// 将从数据库取出的新闻信息放入redis
@@ -119,6 +122,7 @@ class RedisModel extends AbstractModel{
 			}
 			// $newss=$this->redis->exec ();
 			$newss = array_slice ( $this->redis->exec (), count ( $newssDb ) * 2 );
+			//writeData($newss);
 		}
 		return $newss;
 	}
@@ -128,21 +132,28 @@ class RedisModel extends AbstractModel{
 		// echo " a ".$count;
 		if (! $count) {
 			// redis中不存在用户的收藏，从本地数据库中取出,后面两个参数无用
-			$userStorage = $this->dao->getStorageById ( $userId, 0, 0 );
+			$userStorage = $this->dao->getStorageByUserId ( $userId, 0, 0 );
 			if ($userStorage) {
 				$find1 = ";";
 				$replace = ",";
 				//echo self::$userStorageOutTime . " dd";
+				writeData($userStorage);
+				//去掉开始的；
+				$userStorage=substr($userStorage, 1);
 				// 将取出的数据放入redis,数据库中的数据存储格式为 storagetime,newsId;storagetime,newsId
 				$userStorage = str_replace ( $find1, $replace, $userStorage );
+				
 				//echo "dbuserStorage:" . $userStorage . "<br>";
 				$this->redis->pipeline ();
 				$redisVal = "\$this->redis->zAdd('userStorage:" . $userId . "'," . $userStorage . ");";
 				// echo $redisVal;
-				eval ( $redisVal );
+				writeData("     ".$redisVal);
+				eval($redisVal);
 				$this->redis->expire ( "userStorage:" . $userId, self::$userStorageOutTime );
 				$this->redis->zCard ( "userStorage:" . $userId );
-				$count = $this->redis->exec () [2];
+				$count = $this->redis->exec ()[2];
+				//writeData($count);
+				//$count=$count[2];
 				// print_r($count);
 				// $count=$count[2];
 			}
@@ -156,7 +167,7 @@ class RedisModel extends AbstractModel{
 			$count = $this->dao->getSearchValCount ( $search_val );
 			$this->redis->setex ( "searchCount:" . $search_val, self::$searchOutTime, $count );
 		}
-		return ceil($count/10);
+		return $count;
 	}
 	
 	function getSearchVal($search_val, $offset, $num, $pageCount) {
@@ -164,7 +175,7 @@ class RedisModel extends AbstractModel{
 		$page = intval ( $offset / $num ) + 1;
 		$searchNewsIds = $this->redis->lrange ( "searchVal:" . $search_val . ":" . $page, 0, $num - 1 );
 		if (! $searchNewsIds) {
-			echo "d";
+			//echo "d";
 			// 该页对应的内容不在redis中，需要去数据库中取,一次取5页
 			// 判断是从左边还是右边
 			if ($page == $pageCount) {
@@ -194,7 +205,7 @@ class RedisModel extends AbstractModel{
 	}
 	
 	function getRecommendNews($num,$userId) {
-		
+		writeData("num:".$num." userID:".$userId);
 		// 用户第一次加载主页
 		if (! $userId) {
 			$current_ip = getIp ();
@@ -206,79 +217,89 @@ class RedisModel extends AbstractModel{
 				$_SESSION ["userId"] = string2secret ( $userIdFromIp );
 				setcookie ( "userId", string2secret ( $userIdFromIp ) );
 				$userId = $userIdFromIp;
+				return $this->getRecommByUserId($userId,$num);
 			} else {
 				// ip对应的用户不存在，插入临时用户
 				$userId = $this->dao->addUser ( $current_ip );
+				return $this->getNewsByLabel ( 100, $num, "default",$userId);
 			}
 			// writeData("userId:".$userId);
 			// 从标签表中拉取数据,无登陆的用户对应的新闻标签类是100，名字为default
-			return $this->getNewsByLabel ( 100, $num, "default");
+			
 		} else {
 			// 用户已经加载过主页
-			// writeData("userId:".$userId);
+			 writeData("hava load the index page:");
 			if ($_SESSION ["userName"]) {
 				// 用户已登录从推荐表中拉取数据
+				writeData(" load from recomm ");
+				return $this->getRecommByUserId($userId,$num);
 				
-				$markNewData = $this->redis->get ( "recomUpdate:" . $userId );
-				// var_dump($markNewData);
-				// 判断是否有新数据
-				if ($markNewData) {
-					//后两个参数无用
-					$result = $this->dao->getRecommendNews ( $userId,0,0);
-					//print_r($result);
-					$this->redis->pipeline ();
-					$recommkey = "userRecomm:" . $userId;
-					// 清空原数据
-					$this->redis->del ( $recommkey );
-					foreach ( $result as $newsId ) {
-						$this->redis->rPush ( $recommkey, $newsId );
-					}
-					$this->redis->set("recomUpdate:" . $userId,0);
-					$this->redis->expire($recommkey,self::$userRecomm);
-					$this->redis->exec ();
-				}
-				
-				$diffNewsIds = array ();
-				
-				while ( ! count ( $diffNewsIds ) ) {
-					$result = $this->redis->lrange ( "userRecomm:" . $userId, 0, $num - 1 );
-					if (! $result) {
-						// 推荐表中无数据。。。
-						//echo "nothing...";
-						return 0;
-					}
-					// 将取出的数据转化为set与浏览表求交集，查看是否该新闻已显示
-					$this->redis->pipeline ();
-					$this->redis->expire("userRecomm:" . $userId,self::$userRecomm);
-					// 先清空临时表
-					$this->redis->sDiffStore ( "recommTemp", "empty", "recommTemp" );
-					
-					foreach ( $result as $newsId ) {
-						$this->redis->sAdd ( "recommTemp", $newsId );
-					}
-					$this->redis->exec ();
-					$diffNewsIds = $this->redis->sDiff ( "recommTemp", "scan:" . $userId );
-					$this->redis->ltrim ( "userRecomm:" . $userId, $num, - 1 );
-				}
-				//print_r($diffNewsIds);
-				// 向浏览表内写数据
-				$this->redis->pipeline ();
-				// 将取出的新闻id放入浏览表中
-				foreach ( $diffNewsIds as $newsId ) {
-					$this->redis->sAdd ( "scan:" . $userId, $newsId );
-				}
-				$this->redis->expire("scan:" . $userId,self::$scanOutTime);
-				$this->redis->exec ();
-				
-				return $this->getNewsByIds ( $diffNewsIds );
 			} else {
 				// 用户未登录从标签表中拉取数据，无登陆的用户对应的新闻标签类是100，名字为default
-				return $this->getNewsByLabel ( 100, $num, "default" );
+				writeData(" load from label ");
+				return $this->getNewsByLabel ( 100, $num, "default",$userId );
 			}
 		}
 	}
 	
-	function getNewsByLabel($labelId, $num, $labelName) {
+	function getRecommByUserId($userId,$num){
+		$markNewData = $this->redis->get ( "recomUpdate:" . $userId );
+		// var_dump($markNewData);
+		//writeData("markNewData:".$markNewData);
+		// 判断是否有新数据
+		if ($markNewData) {
+			//后两个参数无用
+			$result = $this->dao->getRecommendNews ( $userId,0,0);
+			//print_r($result);
+			$this->redis->pipeline ();
+			$recommkey = "userRecomm:" . $userId;
+			// 清空原数据
+			$this->redis->del ( $recommkey );
+			foreach ( $result as $newsId ) {
+				$this->redis->rPush ( $recommkey, $newsId );
+			}
+			$this->redis->set("recomUpdate:" . $userId,0);
+			$this->redis->expire($recommkey,self::$userRecomm);
+			$this->redis->exec ();
+		}
+		
+		$diffNewsIds = array ();
+		
+		while ( ! count ( $diffNewsIds ) ) {
+			$result = $this->redis->lrange ( "userRecomm:" . $userId, 0, $num - 1 );
+			//writeData($result);
+			if (! $result) {
+				// 推荐表中无数据。。。
+				writeData ("nothing...");
+				return 0;
+			}
+			// 将取出的数据转化为set与浏览表求交集，查看是否该新闻已显示
+			$this->redis->pipeline ();
+			$this->redis->expire("userRecomm:" . $userId,self::$userRecomm);
+			// 先清空临时表
+			$this->redis->sDiffStore ( "recommTemp", "empty", "recommTemp" );
+				
+			foreach ( $result as $newsId ) {
+				$this->redis->sAdd ( "recommTemp", $newsId );
+			}
+			$this->redis->exec ();
+			$diffNewsIds = $this->redis->sDiff ( "recommTemp", "scan:" . $userId );
+			$this->redis->ltrim ( "userRecomm:" . $userId, $num, - 1 );
+		}
+		//print_r($diffNewsIds);
+		// 向浏览表内写数据
+		$this->redis->pipeline ();
+		// 将取出的新闻id放入浏览表中
+		foreach ( $diffNewsIds as $newsId ) {
+			$this->redis->sAdd ( "scan:" . $userId, $newsId );
+		}
+		$this->redis->expire("scan:" . $userId,self::$scanOutTime);
+		$this->redis->exec ();
+		
+		return $this->getNewsByIds ( $diffNewsIds );
+	}
+	
+	function getNewsByLabel($labelId, $num, $labelName,$userId) {
 		$offset = 0;
 		$loadCount = $num;
 		if ($_SESSION ["$labelName"]) {
@@ -288,9 +309,10 @@ class RedisModel extends AbstractModel{
 		
 		$markNewData = $this->redis->get ( $labelName . ":update" );
 		// var_dump($markNewData);
-		
+		//writeData("nologinmarkNewData:".$markNewData."  ");
 		// 判断是否有新数据
 		if ($markNewData) {
+			writeData(" have new data..");
 			// echo "have update data.<br>";
 			//第二个参数无用
 			$result = $this->dao->getNewsByLabel ( $labelId, 0,$markNewData );
@@ -302,9 +324,12 @@ class RedisModel extends AbstractModel{
 			$this->redis->set ( $labelName . ":update", 0 );
 			$this->redis->exec ();
 		}
+		
+		writeData("offset:".$offset." loadCount:".$loadCount." \n");
 		$result = $this->redis->lrange ( $labelName . ":val", $offset, $offset + $loadCount - 1 );
 		// print_r($result);
 		// echo "<br>";
+		//writeData(var);
 		// 将取出的数据转化为set与浏览表求交集，查看是否该新闻已显示
 		$this->redis->pipeline ();
 		// 先清空临时表
@@ -318,6 +343,7 @@ class RedisModel extends AbstractModel{
 		
 		// echo "get newsIDs:";
 		// print_r($diffNewsIds);
+		//writeData("NewsIds:".(print_r($diffNewsIds))."  ".count($diffNewsIds)." ");
 		$count = $num - count ( $diffNewsIds );
 		while ( $count ) {
 			// $this->redis->pipeline ();
@@ -352,11 +378,12 @@ class RedisModel extends AbstractModel{
 		$this->redis->exec ();
 		// echo "offset:".$offset."<br>";
 		// print_r($diffNewsIds);
+		writeData($diffNewsIds);
 		return $this->getNewsByIds ( $diffNewsIds );
 	}
 	
-	function getDetailNews($news_id){
-		//writeData("news_id:".$news_id."  userId:".$userId);
+	function getDetailNews($news_id,$userId){
+		writeData("news_id:".$news_id."  userId:".$userId);
 		//获取新闻信息
 		$news=$this->redis->hGetAll("news:".$news_id);
 		if(!$news){

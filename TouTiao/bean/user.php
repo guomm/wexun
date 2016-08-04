@@ -13,9 +13,16 @@ class User{
 		$this->gender=$gender;
 		$this->account=$account;
 		$this->birthday=$birthday;
-		$this->interest=$interest;
+		
 		$this->password=$password;
 		
+		$num = count ( $interest );
+		$val = 0;
+		for($i = 0; $i < $num; ++ $i) {
+			$val += $interest [$i];
+		}
+		$this->interest = $val;
+		writeData("num:".$num."  interest:".$this->interest);
 	}
 	
 	function printUser(){

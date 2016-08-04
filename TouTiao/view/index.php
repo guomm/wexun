@@ -27,8 +27,8 @@
 				<li><a href="#0" id="car"><img src="../images/car.svg">汽车</a></li>
 			</ul>
 		</div>
-		<div class="col-sm-10" id="tmp">
-		</div>
+		<div class="col-sm-10" id="tmp"></div>
+		<input type="hidden" id="history_back" />
 	</div>
 </body>
 
@@ -68,7 +68,7 @@ function loadData(type,labelId,labelName,num,isAdd){
 		type:'post',
 		dataType:'json',
 		success: function(data){
-			//alert(data);
+			console.log(data);
 			var vals="";
 			for(var i=0;i<data.length;i++){
 				//console.log(date('Y-m-d H:i:s')-data[i].news_time);
@@ -84,7 +84,8 @@ function loadData(type,labelId,labelName,num,isAdd){
 			if(!isAdd)$("#tmp").html(vals);
 			else $("#tmp").append(vals);
 		},  
-		error:function(){
+		error:function(data){
+			console.log(data);
 				alert("加载失败，请稍候再试");
 		}
 			
@@ -209,8 +210,13 @@ function loadDataThreePic(data){
 }
 
 $(document).ready(function () {
-	//alert("d");
-    $("#recomm").click();
+	$("#recomm").click();
+	console.log(document.referrer);
+// 	 var val = $("#history_back").val();
+// 	 if (!val) {
+// 		$("#history_back").val("history");
+//      	$("#recomm").click();
+//      }
 });
 
 $(window).scroll(function() {

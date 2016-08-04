@@ -1,6 +1,6 @@
 <?php
 require_once  'redisModel.php';
-require_once 'redisDao1.php';
+require_once 'dao/redisDao1.php';
 class Controller {
 	private $model;
 	private $userId;
@@ -19,7 +19,7 @@ class Controller {
 	
 	//function login
 	function login ($userName,$password,$rememberMe){
-		echo $this->model->login($userAccount, $password, $rememberMe);
+		echo $this->model->login($userName, $password, $rememberMe);
 	}
 	
 	function register ($user){
@@ -36,7 +36,7 @@ class Controller {
 		echo $this->model->updateUser($user, $this->userId);
 	}
 	function getUserStorage( $num, $offset) {
-		echo $this->model->getStorageById($this->userId, $num, $offset);
+		echo json_encode($this->model->getStorageById($this->userId, $num, $offset));
 	}
 
 	
@@ -49,20 +49,23 @@ class Controller {
 	}
 	
 	function getSearchVal($search_val, $offset, $num, $pageCount) {
-		echo $this->model->getSearchVal($search_val, $offset, $num, $pageCount);
+		echo json_encode($this->model->getSearchVal($search_val, $offset, $num, $pageCount));
 	}
 	
 	function getRecommendNews($num) {
 		
-		echo $this->model->getRecommendNews($num, $this->userId);
+		//$result= ;
+		//writeData(json_encode($result));
+		echo json_encode($this->model->getRecommendNews($num, $this->userId));
+		
 	}
 	
 	function getNewsByLabel($labelId, $num, $labelName) {
-		echo $this->model->getNewsByLabel($labelId, $num, $labelName);
+		echo json_encode($this->model->getNewsByLabel($labelId, $num, $labelName,$this->userId));
 	}
 	
 	function getDetailNews($news_id){
-		echo $this->model->getDetailNews($news_id) ;
+		echo json_encode($this->model->getDetailNews($news_id,$this->userId)) ;
 	} 
 	
 	function recommendNews($news_id){

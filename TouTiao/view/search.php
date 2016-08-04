@@ -50,7 +50,8 @@ $.ajax({
 					'type':'searchVal',
 					'num':10,
 					'offset':0,
-					'search_val':search_val
+					'search_val':search_val,
+					'pageCount':data
 				},
 				type:'post',
 				dataType:'json',
@@ -85,13 +86,15 @@ $.ajax({
 					var offset=(p-1)*num;
 					//console.log("p:"+p);
 					//console.log("offset:"+offset);
+					$(window).scrollTop(0);
 			    	$.ajax({
  						url: "../room.php",  
  						data: {
  							'type':'searchVal',
  							'num':num,
  							'offset':offset,
- 							'search_val':search_val
+ 							'search_val':search_val,
+ 							'pageCount':data
  						},
  						type:'post',
  						dataType:'json',
