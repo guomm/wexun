@@ -1,6 +1,6 @@
 <?php
 require_once  'redisModel.php';
-require_once 'dao/redisDao1.php';
+require_once 'dao/redisDao.php';
 class Controller {
 	private $model;
 	private $userId;
