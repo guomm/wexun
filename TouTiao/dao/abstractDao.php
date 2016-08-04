@@ -4,7 +4,8 @@ require_once "bean/user.php";
 abstract class AbstractDao{
 	protected $conn;
 	function __construct() {
-		$this->conn = createConnection ();
+		
+		$this->conn = new mysqli ( mysqlUrl, mysqlUserName, mysqlPassword, mysqlDBName );
 		if (! $this->conn) {
 			echo "Could not connect: " . CommonDao::$conn->connect_error;
 		}
@@ -195,7 +196,7 @@ function login($userAccount, $password) {
 	
 	
 	function __destruct(){
-		closeConnection ( $this->conn );;
+		$this->conn->close();
 	}
 	
 	abstract function getStorageByUserId($userId, $num, $offset);

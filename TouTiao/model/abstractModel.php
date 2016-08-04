@@ -12,13 +12,13 @@ abstract class AbstractModel {
 			$user_info = json_decode ( $result );
 			$_SESSION ["userId"] = string2secret ( $user_info->user_id );
 			$_SESSION ["userName"] = $user_info->user_name;
-			setcookie ( "userId", string2secret ( $user_info->user_id ) );
-			setcookie ( "userName", $user_info->user_name );
-			setcookie ( "userAccount", $userAccount );
+			setcookie ( "userId", string2secret ( $user_info->user_id ) ,time()+cookieTime);
+			setcookie ( "userName", $user_info->user_name ,time()+cookieTime);
+			setcookie ( "userAccount", string2secret ($userAccount),time()+cookieTime );
 			if (count ( $rememberMe )) {
-				setcookie ( "password", $password );
+				setcookie ( "password", string2secret ($password) ,time()+cookieTime);
 			} else {
-				setcookie ( "password", "" );
+				setcookie ( "password", "" ,time()+cookieTime);
 			}
 		}
 		return $result;
@@ -69,8 +69,8 @@ abstract class AbstractModel {
 	}
 	function logout() {
 		session_destroy();
-		setcookie ( "userId", '', time () - 3600 );
-		setcookie ( "userName", '', time () - 3600 );
+		setcookie ( "userId", '', time () - 3600);
+		setcookie ( "userName", '', time () - 3600);
 		echo 1;
 	}
 	abstract function updateUser($user,$userId);

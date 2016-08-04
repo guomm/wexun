@@ -30,8 +30,9 @@
 				<p class="fieldset">
 					<label class="image-replace cd-username" for="signin-username">用户名</label>
 					<?php 
+					require_once '../model/common.php';
 					if($_COOKIE['userAccount']){
-						echo "<input class='full-width has-padding has-border' id='user_name' name='user_name' type='text' value=".$_COOKIE['userAccount'].">";
+						echo "<input class='full-width has-padding has-border' id='user_name' name='user_name' type='text' value=".secret2string($_COOKIE['userAccount']).">";
 					}else{
 						echo "<input class='full-width has-padding has-border' id='user_name' name='user_name' type='text' value=''>";
 					}
@@ -43,7 +44,7 @@
 					<label class="image-replace cd-password" for="signin-password">密码</label>
 					<?php 
 					if($_COOKIE['password']){
-						echo "<input class='full-width has-padding has-border' id='password' name='password' type='password' value=".$_COOKIE['password'].">";
+						echo "<input class='full-width has-padding has-border' id='password' name='password' type='password' value=".secret2string($_COOKIE['password']).">";
 					}else{
 						echo "<input class='full-width has-padding has-border' id='password' name='password' type='password' value=''>";
 					}

@@ -11,39 +11,58 @@
 // echo $redisDao->pingRedis();
 // $a="a;b;c;";
 // echo mb_substr_count( $a,";");
-$redis = new Redis ();
-$redis->connect ( '127.0.0.1', 6379 );
 
-$userIds = array (
-		"17",
-		"1" 
-);
-$labels = array (
-		"default",
-		"science"
-);
-$num = 227;
+require 'model/constant.php';
+echo time();
+echo "<br>";
+echo time()+cookieTime;
+// echo "$sessionTime    $cookieTime <br>";
+// //$xml = simplexml_load_string(configure);
+// print_r($xml);
+// $login = $xml->mysqlData->url;//这里返回的依然是个SimpleXMLElement对象
+// echo "<br>";
+// print_r($login);
+// echo "<br>";
+// $login =  $xml->redisData;//在做数据比较时，注意要先强制转换
+// print_r($login);
 
-resetUserRecomm ($redis, $userIds, $num );
-resetLabel($redis,$labels,$num);
+	
+// $login = (string) $xml->login;//在做数据比较时，注意要先强制转换
+// print_r($login);
+
+// $redis = new Redis ();
+// $redis->connect ( '127.0.0.1', 6379 );
+
+// $userIds = array (
+// 		"17",
+// 		"1" 
+// );
+// $labels = array (
+// 		"default",
+// 		"science"
+// );
+// $num = 227;
+
+// resetUserRecomm ($redis, $userIds, $num );
+// resetLabel($redis,$labels,$num);
 
 
 
 
-function resetUserRecomm($redis, $userIds, $num) {
-	foreach ( $userIds as $userId ) {
-		$redis->set ( "recomUpdate:" . $userId, $num );
-		$redis->del ( "scan:" . $userId );
-	}
-}
+// function resetUserRecomm($redis, $userIds, $num) {
+// 	foreach ( $userIds as $userId ) {
+// 		$redis->set ( "recomUpdate:" . $userId, $num );
+// 		$redis->del ( "scan:" . $userId );
+// 	}
+// }
 
-function resetLabel($redis, $labels, $num){
-	foreach ( $labels as $labelTemp ) {
-		$key=$labelTemp . ":update";
-		echo $key."<br>";
-		$redis->set ($key, $num );
-	}
-}
+// function resetLabel($redis, $labels, $num){
+// 	foreach ( $labels as $labelTemp ) {
+// 		$key=$labelTemp . ":update";
+// 		echo $key."<br>";
+// 		$redis->set ($key, $num );
+// 	}
+// }
 
 // $a="\$redis->zAdd('userStorage:1',55,380,18,380,23,381,323,382,2323,383,10323,384,12123,385,12313,386,12332,388,632,388,532,389,4332,390,32,391);";
 // eval($a);

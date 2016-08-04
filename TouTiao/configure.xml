@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<root>
+	<cookieData>
+		<cookieTime>604800</cookieTime>
+	</cookieData>
+
+	<sessionTime>604800</sessionTime>
+	<mysqlData>
+		<url>127.0.0.1:3307</url>
+		<userName>root</userName>
+		<password>1234</password>
+		<dbName>wexun</dbName>
+	</mysqlData>
+
+	<redisData>
+		<ip>127.0.0.1</ip>
+		<port>6379</port>
+		<redisOutTime>
+			<userInfoOutTime>600</userInfoOutTime>
+			<userStorageOutTime>600</userStorageOutTime>
+			<newsOutTime>7200</newsOutTime>
+			<searchOutTime>7200</searchOutTime>
+			<tempOutTime>3</tempOutTime>
+			<userRecomm>1200</userRecomm>
+			<scanOutTime>1200</scanOutTime>
+			<newsContentOutTime>7200</newsContentOutTime>
+		</redisOutTime>
+	</redisData>
+</root>

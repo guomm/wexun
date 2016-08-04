@@ -2,19 +2,13 @@
 require_once "abstractModel.php";
 class RedisModel extends AbstractModel{
 	private $redis;
-	static $userInfoOutTime = 600;
-	static $userStorageOutTime = 600;
-	static $newsOutTime = 7200;
-	static $searchOutTime = 7200;
-	static $tempOutTime = 3;
-	static $userRecomm=1200;
-	static $scanOutTime=1200;
-	static $newsContentOutTime=7200;
 	
 	function __construct($dao,$ip,$port) {
 		parent::__construct($dao);
 		$this->redis = new Redis ();
-		$this->redis->connect ( $ip, $port );
+		$this->redis->connect ( redisIP, redisPort );
+		
+		//writeData("$newsContentOutTime $scanOutTime $userRecomm $tempOutTime $searchOutTime $newsOutTime $userStorageOutTime $userInfoOutTime");
 	}
 	
 // 	function pingRedis(){
@@ -28,7 +22,7 @@ class RedisModel extends AbstractModel{
 			// redis不存在个人信息，从数据库中加载
 			$result = $this->dao->getUserInfo ( $userId );
 			$this->redis->hMset ( "user:" . $userId, $result );
-			$this->redis->expire ( "user:" . $userId, slef::$userInfoOutTime );
+			$this->redis->expire ( "user:" . $userId, userInfoOutTime );
 		}
 		return json_encode ( $result );
 	}
@@ -43,7 +37,7 @@ class RedisModel extends AbstractModel{
 		);
 		if ($result) {
 			$this->redis->hMset ( "user:" . $userId, $userChanges );
-			$this->redis->expire ( "user:" . $userId, self::$userInfoOutTime );
+			$this->redis->expire ( "user:" . $userId, userInfoOutTime );
 		}
 		return $result;
 	}
@@ -73,7 +67,7 @@ class RedisModel extends AbstractModel{
 				$redisVal = "\$this->redis->zAdd('userStorage:" . $userId . "'," . $userStorage . ");";
 				// echo $redisVal;
 				eval ( $redisVal );
-				$this->redis->expire ( "userStorage:" . $userId, self::$userStorageOutTime );
+				$this->redis->expire ( "userStorage:" . $userId, userStorageOutTime );
 				$this->redis->zRange ( "userStorage:" . $userId, $offset, $offset + $num - 1 );
 				$userStorageIds = $this->redis->exec () [2];
 				// print_r ( $userStorageIds );
@@ -111,7 +105,7 @@ class RedisModel extends AbstractModel{
 			foreach ( $newssDb as $tempNews ) {
 				// echo $tempNews["news_id"]." a ";
 				$this->redis->hMset ( "news:" . $tempNews ["news_id"], $tempNews );
-				$this->redis->expire ( "news:" . $tempNews ["news_id"], self::$newsOutTime );
+				$this->redis->expire ( "news:" . $tempNews ["news_id"], newsOutTime );
 			}
 			// $this->redis->exec();
 			// 重置news，依次根据新闻id从redis中获取内容
@@ -136,7 +130,7 @@ class RedisModel extends AbstractModel{
 			if ($userStorage) {
 				$find1 = ";";
 				$replace = ",";
-				//echo self::$userStorageOutTime . " dd";
+				//echo userStorageOutTime . " dd";
 				writeData($userStorage);
 				//去掉开始的；
 				$userStorage=substr($userStorage, 1);
@@ -149,7 +143,7 @@ class RedisModel extends AbstractModel{
 				// echo $redisVal;
 				writeData("     ".$redisVal);
 				eval($redisVal);
-				$this->redis->expire ( "userStorage:" . $userId, self::$userStorageOutTime );
+				$this->redis->expire ( "userStorage:" . $userId, $userStorageOutTime );
 				$this->redis->zCard ( "userStorage:" . $userId );
 				$count = $this->redis->exec ()[2];
 				//writeData($count);
@@ -165,7 +159,7 @@ class RedisModel extends AbstractModel{
 		$count = $this->redis->get ( "searchCount:" . $search_val );
 		if (! $count) {
 			$count = $this->dao->getSearchValCount ( $search_val );
-			$this->redis->setex ( "searchCount:" . $search_val, self::$searchOutTime, $count );
+			$this->redis->setex ( "searchCount:" . $search_val, searchOutTime, $count );
 		}
 		return $count;
 	}
@@ -191,11 +185,11 @@ class RedisModel extends AbstractModel{
 			for($i = 0; $i < $count; $i ++) {
 				$key = "searchVal:" . $search_val . ":" . (intval ( ($offset + $i) / $num ) + 1);
 				$this->redis->rPush ( $key, $news [$i] ["news_id"] );
-				$this->redis->expire ( $key, self::$searchOutTime );
+				$this->redis->expire ( $key, searchOutTime );
 				if (! $this->redis->hExists ( "news:" . $news [$i] ["news_id"], "news_id" )) {
 					$this->redis->hMset ( "news:" . $news [$i] ["news_id"], $news [$i] );
 				}
-				$this->redis->expire ( "news:" . $news [$i] ["news_id"], self::$newsOutTime );
+				$this->redis->expire ( "news:" . $news [$i] ["news_id"], newsOutTime );
 			}
 			$this->redis->exec ();
 			return array_slice ( $news, 0, $num - 1 );
@@ -259,7 +253,7 @@ class RedisModel extends AbstractModel{
 				$this->redis->rPush ( $recommkey, $newsId );
 			}
 			$this->redis->set("recomUpdate:" . $userId,0);
-			$this->redis->expire($recommkey,self::$userRecomm);
+			$this->redis->expire($recommkey,userRecomm);
 			$this->redis->exec ();
 		}
 		
@@ -275,7 +269,7 @@ class RedisModel extends AbstractModel{
 			}
 			// 将取出的数据转化为set与浏览表求交集，查看是否该新闻已显示
 			$this->redis->pipeline ();
-			$this->redis->expire("userRecomm:" . $userId,self::$userRecomm);
+			$this->redis->expire("userRecomm:" . $userId,userRecomm);
 			// 先清空临时表
 			$this->redis->sDiffStore ( "recommTemp", "empty", "recommTemp" );
 				
@@ -293,7 +287,7 @@ class RedisModel extends AbstractModel{
 		foreach ( $diffNewsIds as $newsId ) {
 			$this->redis->sAdd ( "scan:" . $userId, $newsId );
 		}
-		$this->redis->expire("scan:" . $userId,self::$scanOutTime);
+		$this->redis->expire("scan:" . $userId,scanOutTime);
 		$this->redis->exec ();
 		
 		return $this->getNewsByIds ( $diffNewsIds );
@@ -374,7 +368,7 @@ class RedisModel extends AbstractModel{
 		foreach ( $diffNewsIds as $newsId ) {
 			$this->redis->sAdd ( "scan:" . $userId, $newsId );
 		}
-		$this->redis->expire("scan:" . $userId,self::$scanOutTime);
+		$this->redis->expire("scan:" . $userId,scanOutTime);
 		$this->redis->exec ();
 		// echo "offset:".$offset."<br>";
 		// print_r($diffNewsIds);
@@ -389,7 +383,7 @@ class RedisModel extends AbstractModel{
 		if(!$news){
 			$news = $this->dao->getDetailNews ( $news_id );
 			$this->redis->hMset ( "news:" . $news ["news_id"], $news );
-			$this->redis->expire ( "news:" . $news ["news_id"], self::$newsOutTime );
+			$this->redis->expire ( "news:" . $news ["news_id"], newsOutTime );
 		}
 		//print_r($news);
 		$newsData=$this->redis->get("newsData:".$news_id);
@@ -397,7 +391,7 @@ class RedisModel extends AbstractModel{
 		if(!$newsData){
 			$newsData=file_get_contents_utf8($news["news_data"]);
 			$this->redis->set("newsData:".$news_id,$newsData);
-			$this->redis->expire ( "news:" . $news ["news_id"], self::$newsContentOutTime );
+			$this->redis->expire ( "news:" . $news ["news_id"], newsContentOutTime );
 		}
 		$news["news_data"]=$newsData;
 		//echo "<br>";
@@ -405,9 +399,9 @@ class RedisModel extends AbstractModel{
 		//写入点击事件
 		$this->redis->pipeline();
 		$this->redis->sAdd("userClick:".$userId,$news_id);
-		$this->redis->expire("userClick:".$userId,self::$userRecomm);
+		$this->redis->expire("userClick:".$userId,userRecomm);
 		$this->redis->sAdd("newsClick:".$news_id,$userId);
-		$this->redis->expire("newsClick:".$news_id,self::$newsOutTime);
+		$this->redis->expire("newsClick:".$news_id,newsOutTime);
 		$this->redis->exec();
 		
 		return $news;

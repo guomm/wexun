@@ -1,10 +1,14 @@
 <?php
+
+require_once 'model/constant.php';
 require_once ("model/controller.php");
 
+
+
 session_start();
-ini_set('session.gc_maxlifetime', 3600);
-$_SESSION["default"]=0;
-$_SESSION["science"]=0;
+ini_set('session.gc_maxlifetime', sessionTime);
+//$_SESSION["default"]=0;
+//$_SESSION["science"]=0;
 // 1 is redis
 $controller=new Controller(1);
 $type = $_POST ["type"];
