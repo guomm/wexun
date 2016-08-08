@@ -1,18 +1,24 @@
 <?php
-require_once  'redisModel.php';
+require_once  'redisFactory.php';
 require_once 'dao/redisDao.php';
 class Controller {
 	private $model;
 	private $userId;
 	
-	function __construct($type) {
-		if($type ==1){
-			//redis
-			$dao=new RedisDao();
-			//$ip="127.0.0.1";
-			//$port=6379;
-			$this->model=new RedisModel ($dao,redisIP,redisPort);
-		}
+	function __construct() {
+// 		$type=1;
+// 		if($type ==1){
+// 			//redis
+// 			$dao=new RedisDao();
+// 			//$ip="127.0.0.1";
+// 			//$port=6379;
+// 			$this->model=new RedisModel ($dao,redisIP,redisPort);
+// 		}
+		$factory=RedisFactory::singleton();
+		$this->model=$factory->createModel();
+		//$this->model=ModelFactory::singleton()->createModel($type);
+		//$factory=ModelFactory::singleton();
+		//$this->model=$factory->
 		if ($_SESSION ["userId"])
 			$this->userId = $_SESSION ["userId"];
 	}

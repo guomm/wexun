@@ -39,7 +39,9 @@ require 'dao/abstractDao.php';
 //$a="dsadads\tfdfdsfdsf\r\nfdfdsfdf\r\nhh";
 //writeData($a);
 //require 'model/writeToDisk.php';
- updateData();
+
+ 
+ //updateData();
 
 // $result=$redis->keys("news:*");
 // print_r($result);

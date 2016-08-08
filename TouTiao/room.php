@@ -1,6 +1,7 @@
 <?php
 
 require_once 'model/constant.php';
+require_once 'model/redisFactory.php';
 require_once ("model/controller.php");
 
 
@@ -12,7 +13,7 @@ ini_set('session.gc_maxlifetime', sessionTime);
 //$_SESSION["default"]=0;
 //$_SESSION["science"]=0;
 // 1 is redis
-$controller=new Controller(1);
+$controller=new Controller();
 $type = $_POST ["type"];
 //writeData($type);
 switch ($type) {
