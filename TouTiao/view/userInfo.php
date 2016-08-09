@@ -10,6 +10,7 @@
 <script src="../js/jquery.validate.js"></script>
 <script src="../js/jquery.page.js"></script>
 <script src="../js/main.js"></script>
+<script src="../js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="../css/common.css">
 <link rel="stylesheet"  href="../css/style.css" />
 
@@ -40,7 +41,7 @@ $(document).ready(function () {
 
 $("#user_info").on('click', function(event){
 	<?php
-		echo "var account=" . $_COOKIE ["userAccount"] . ";";
+		echo "var account=" . secret2string($_COOKIE['userAccount']) . ";";
 		echo "var isLogin='" . $_COOKIE ["userName"] . "';";
 	?>
 	$("#mystorage").removeClass("bg-click");

@@ -30,9 +30,21 @@
 		<div class="col-sm-10" id="tmp"></div>
 		<input type="hidden" id="history_back" />
 	</div>
+
+    <button class="btn btn-primary goto-top" title="返回顶部" id="js-goto-top">
+        <i class="glyphicon glyphicon-arrow-up"></i>
+    </button>
+
 </body>
 
 <script type="text/javascript">
+
+$(function(){
+    $("#js-goto-top").on("click", function (e) {
+        $("html,body").animate({scrollTop:0}, 300);
+    });
+});
+
 var mark = true; 
 function setTure(){
 	mark = true; 
@@ -223,6 +235,10 @@ $(window).scroll(function() {
 	//$(window).scrollTop()这个方法是当前滚动条滚动的距离
 	//$(window).height()获取当前窗体的高度
 	//$(document).height()获取当前文档的高度
+	
+       var top = document.documentElement.scrollTop || document.body.scrollTop;
+       $(".category").css({"margin-top": top + "px"});
+	
 	var bot = 50; //bot是底部距离的高度
 	if (mark &&( bot+$(window).scrollTop()) >= ($(document).height() - $(window).height())) {
 		//当底部基本距离+滚动的高度〉=文档的高度-窗体的高度时；

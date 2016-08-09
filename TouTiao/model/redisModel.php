@@ -182,10 +182,12 @@ class RedisModel extends AbstractModel{
 			} else if ($this->redis->lindex ( "sv:" . $search_val . ":" . ($page + 1), 0 )) {
 				$offset = $offset - $num * 4;
 			}
+			if($offset<0)$offset=0;
 			$news = $this->dao->getSearchVal ( $num * 5, $offset, $search_val );
 			// print_r($news);
 			$count = count ( $news );
 			// echo "count:".$count."<br>";
+			writeData("offset:".$offset."count:".$count);
 			$this->redis->pipeline ();
 			for($i = 0; $i < $count; $i ++) {
 				$key = "sv:" . $search_val . ":" . (intval ( ($offset + $i) / $num ) + 1);
@@ -197,6 +199,7 @@ class RedisModel extends AbstractModel{
 				$this->redis->expire ( "news:" . $news [$i] ["news_id"], newsOutTime );
 			}
 			$this->redis->exec ();
+			if($count<=$num)return $news;
 			return array_slice ( $news, 0, $num - 1 );
 		} else {
 			return $this->getNewsByIds ( $searchNewsIds );
@@ -273,7 +276,7 @@ class RedisModel extends AbstractModel{
 		
 		while ( ! count ( $diffNewsIds ) ) {
 			$result = $this->redis->lrange ( "urec:" . $userId, 0, $num - 1 );
-			//writeData($result);
+			writeData($result);
 			if (! $result) {
 				// 推荐表中无数据。。。从标签表中拉取
 				//writeData ("nothing...");

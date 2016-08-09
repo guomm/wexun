@@ -99,7 +99,8 @@ $.ajax({
  						type:'post',
  						dataType:'json',
  						success: function(data){
- 							//console.log(data);
+ 							console.log(data);
+ 							if(data==null)return;
  							var vals="";
  				 			for(var i=0;i<data.length;i++){
  				 				//console.log(date('Y-m-d H:i:s')-data[i].news_time);

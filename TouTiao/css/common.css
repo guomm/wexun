@@ -73,7 +73,12 @@ text-decoration: none;
 	color: #406599;
 }
 
-
+ .goto-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            cursor: pointer;
+        }
 
 .image-list {
 	margin-bottom: 6px;
