@@ -1,6 +1,4 @@
 <?php
-require_once "dao/abstractDao.php";
-
 abstract class AbstractModel {
 	protected $dao;
 	function __construct($dao) {
@@ -11,8 +9,8 @@ abstract class AbstractModel {
 		if ($result) {
 			$user_info = json_decode ( $result );
 			$_SESSION ["userId"] = $user_info->user_id ;
-			//$_SESSION ["userName"] = $user_info->user_name;
-			//setcookie ( "userId", string2secret ( $user_info->user_id ) ,time()+cookieTime);
+			$_SESSION ["login"] = 1;
+			setcookie ( "userId", string2secret ( $user_info->user_id ) ,time()+cookieTime);
 			setcookie("PHPSESSID",session_id(),time()+cookieTime);
 			setcookie ( "userName", $user_info->user_name ,time()+cookieTime);
 			setcookie ( "userAccount", string2secret ($userAccount),time()+cookieTime );
@@ -21,6 +19,7 @@ abstract class AbstractModel {
 			} else {
 				setcookie ( "password", "" ,time()+cookieTime);
 			}
+			
 		}
 		return $result;
 	}
@@ -49,11 +48,13 @@ abstract class AbstractModel {
 		// 写入推荐事件
 		$result = $this->dao->recommendNews ( $news_id, $userId );
 		// 更改新闻推荐个数
-		$this->dao->addOneRecommendNum ( $news_id, 1 );
+		//$this->dao->addOneRecommendNum ( $news_id, 1 );
 		return $result;
 	}
 	function storageNews($news_id, $userId) {
 		// 写入收藏事件
+		//writeData($news_id);
+		//writeData($userId);
 		return $this->dao->storageNews ( $news_id, $userId );
 	}
 	function removeStorage($news_id,$userId) {
@@ -62,7 +63,7 @@ abstract class AbstractModel {
 	function removeRecomm($news_id, $userId) {
 		$result = $this->dao->removeRecomm ( $news_id, $userId );
 		// 更改新闻推荐个数
-		$this->dao->addOneRecommendNum ( $news_id, - 1 );
+		//$this->dao->addOneRecommendNum ( $news_id, - 1 );
 		return $result;
 	}
 	function reportNews($news_id, $userId,$describe) {

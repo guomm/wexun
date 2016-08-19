@@ -2,9 +2,10 @@
 <header class="header">
 	<div class="container">
 		<div class="col-sm-2 text-center">
-			<a class="logo-link" href="/"> <img class="logo"
-				src="http://s3a.pstatp.com/toutiao/resource/toutiao_web/static/style/image/newindex/toutiaologo_7f2639e.png">
-			</a>
+<!-- 			<a class="logo-link" href="/"> <img class="logo" -->
+<!-- 				src="http://s3a.pstatp.com/toutiao/resource/toutiao_web/static/style/image/newindex/toutiaologo_7f2639e.png"> -->
+<!-- 			</a> -->
+<h1 class="logo">We讯</h1>
 		</div>
 		
 		<div class="col-sm-6 header-text">

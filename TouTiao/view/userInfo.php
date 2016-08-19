@@ -4,8 +4,9 @@
 <meta charset="UTF-8">
 <title>头条</title>
 
-<link rel="stylesheet"
-	href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+<!-- <link rel="stylesheet" -->
+<!-- 	href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
+<link rel="stylesheet"  href="../css/bootstrap.min.css" />	
 <script src="../js/jquery.min.js"></script>
 <script src="../js/jquery.validate.js"></script>
 <script src="../js/jquery.page.js"></script>
@@ -232,14 +233,18 @@ $("#mystorage").on('click', function(event){
 						var vals="";
 			 			for(var i=0;i<data.length;i++){
 			 				//console.log(date('Y-m-d H:i:s')-data[i].news_time);
-			 				console.log(data[i].news_time);
-			 				if(data[i].news_img_num==0){
-			 					vals+=loadDataNoPic(data[i]);
-			 				}else if(data[i].news_img_num==1){
-			 					vals+=loadDataOnePic(data[i]);
-			 				}else{
-			 					vals+=loadDataThreePic(data[i]);
-			 				}
+			 				//console.log(data[i].news_time);
+			 				console.log(data[i]);
+								if(data[i].news_imgs.length==0){
+									vals+=loadDataNoPic(data[i]);
+								}else {
+									var len=data[i].news_imgs.split(";").length;
+									if(len==1){
+										vals+=loadDataOnePic(data[i]);
+									}else{
+										vals+=loadDataThreePic(data[i]);
+									}	
+								}
 			 			}
 			 			$(".content").html(vals);
 			 		//	$("#tmp").html(vals);
@@ -271,14 +276,17 @@ $("#mystorage").on('click', function(event){
  							var vals="";
  				 			for(var i=0;i<data.length;i++){
  				 				//console.log(date('Y-m-d H:i:s')-data[i].news_time);
- 				 				console.log(data[i].news_time);
- 				 				if(data[i].news_img_num==0){
- 				 					vals+=loadDataNoPic(data[i]);
- 				 				}else if(data[i].news_img_num==1){
- 				 					vals+=loadDataOnePic(data[i]);
- 				 				}else{
- 				 					vals+=loadDataThreePic(data[i]);
- 				 				}
+ 				 				console.log(data[i]);
+ 								if(data[i].news_imgs.length==0){
+ 									vals+=loadDataNoPic(data[i]);
+ 								}else {
+ 									var len=data[i].news_imgs.split(";").length;
+ 									if(len==1){
+ 										vals+=loadDataOnePic(data[i]);
+ 									}else{
+ 										vals+=loadDataThreePic(data[i]);
+ 									}	
+ 								}
  				 			}
  				 			$(".content").html(vals);
  				 		//	$("#tmp").html(vals);

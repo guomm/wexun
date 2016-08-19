@@ -1,6 +1,5 @@
 <?php
-require_once "abstractFactory.php";
-require_once "redisModel.php";
+
 class RedisFactory implements AbstractFactory {
 	// // 保存例实例在此属性中
 	private static $_instance;

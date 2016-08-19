@@ -1,10 +1,11 @@
 <?php
-require 'model/common.php';
-require_once 'model/constant.php';
-require 'dao/abstractDao.php';
- require 'dao/redisDao.php';
-
-
+// require 'model/common.php';
+// require_once 'model/constant.php';
+// require 'dao/abstractDao.php';
+//  require 'dao/redisDao.php';
+echo time();
+$a=" 456";
+echo $a+123;
 // $redisDao=new RedisDao();
 // $redisDao->test();
 // print_r($redisDao->getUserStorage(1,10,0)) ;
@@ -127,4 +128,26 @@ function resetLabel($redis, $labels, $num,$userIds){
 // $str=str_replace($find1, $replace, $str);
 // $str=str_replace($find2, $replace, $str);
 // echo $str;
+ //$filename="D:/test.jpg";
+// // $img_out_string = "header('Content-type:image/png');imagepng(imagecreatefrompng('$filename'));";
+// // eval($img_out_string);
+
+//header('Content-type:image/png');
+//imagejpeg(imagecreatefromjpeg($filename));
+//imagedestroy($img);
+
+// // 创建新的图像实例
+// $im = imagecreatetruecolor(100, 100);
+
+// // 设置背景为白色
+// imagefilledrectangle($im, 0, 0, 99, 99, 0xFFFFFF);
+
+// //在图像上写字
+// imagestring($im, 3, 40, 20, 'GD Library', 0xFFBA00);
+
+// // 输出图像到浏览器
+// header('Content-Type: image/gif');
+
+// imagegif($im);
+// imagedestroy($im);
 ?> 

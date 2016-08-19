@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="18" height="20" viewBox="0 0 18 20">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #60a3f5;
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <path id="story_channel.svg" class="cls-1" d="M402,1034a3.534,3.534,0,0,0,3,2h13s2-1.59,2-3v-13s-0.826-4-4-4H404a2.116,2.116,0,0,0-2,2v16Zm2-2c0,1.43,2,2,2,2h10c1.735,0,2-2,2-2v-11s-0.84-2-2-2c-0.065,0,0,11,0,11a2.006,2.006,0,0,1-2,2H404Z" transform="translate(-402 -1016)"/>
+</svg>

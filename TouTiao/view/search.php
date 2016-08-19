@@ -15,7 +15,7 @@
 <?php 
 echo "var search_val='".$_GET["search_val"]."';";
 ?>
-$("#search_input").val(search_val);
+//$("#search_input").val(search_val);
 
 function transferTime(time){
 	var returnVal;
@@ -60,14 +60,17 @@ $.ajax({
 					var vals="";
 		 			for(var i=0;i<data.length;i++){
 		 				//console.log(date('Y-m-d H:i:s')-data[i].news_time);
-		 				console.log(data[i].news_time);
-		 				if(data[i].news_img_num==0){
-		 					vals+=loadDataNoPic(data[i]);
-		 				}else if(data[i].news_img_num==1){
-		 					vals+=loadDataOnePic(data[i]);
-		 				}else{
-		 					vals+=loadDataThreePic(data[i]);
-		 				}
+		 				console.log(data[i]);
+						if(data[i].news_imgs.length==0){
+							vals+=loadDataNoPic(data[i]);
+						}else {
+							var len=data[i].news_imgs.split(";").length;
+							if(len==1){
+								vals+=loadDataOnePic(data[i]);
+							}else{
+								vals+=loadDataThreePic(data[i]);
+							}	
+						}
 		 			}
 		 			$(".content").html(vals);
 		 		//	$("#tmp").html(vals);
@@ -169,4 +172,7 @@ function loadDataThreePic(data){
 		</div>
 	</div>
 </body>
+<script type="text/javascript">
+$("#search_input").val(search_val);
+</script>
 </html>

@@ -1,7 +1,10 @@
 <?php
-
+require_once 'bean/user.php';
+require_once 'model/common.php';
 require_once 'model/constant.php';
-require_once 'model/redisFactory.php';
+require_once 'dao/abstractDao.php';
+require_once 'model/abstractModel.php';
+require_once 'model/abstractFactory.php';
 require_once ("model/controller.php");
 
 

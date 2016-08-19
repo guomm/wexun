@@ -18,22 +18,25 @@
     <div class="container" id="con">
 		<div class="col-sm-2 text-center">
 			<ul class="list-unstyled category">
-				<li><a  href="#0" id="recomm"><img src="../images/recomment.svg">推荐</a></li>
-				<li><a  href="#0" id="hot"><img src="../images/hot.svg">热点</a></li>
-				<li><a  href="#0" id="science"><img src="../images/science.svg">科技</a></li>
-				<li><a  href="#0" id="enjoy"><img src="../images/enjoy.svg">娱乐</a></li>
-				<li><a  href="#0" id="money"><img src="../images/money.svg">财经</a></li>
-				<li><a  href="#0" id="physical"><img src="../images/physical.svg">体育</a></li>
-				<li><a  href="#0" id="car"><img src="../images/car.svg">汽车</a></li>
+				<li><a href="#0" id="recomm"><img src="../images/recomment.svg">推荐</a></li>
+				<li><a href="#0" id="hot"><img src="../images/hot.svg">热点</a></li>
+				<li><a href="#0" id="home"><img src="../images/home.svg">国内</a></li>
+				<li><a href="#0" id="innel"><img src="../images/international.svg">国际</a></li>
+				<li><a href="#0" id="social"><img src="../images/social.svg">社会</a></li>
+				<li><a href="#0" id="money"><img src="../images/money.svg">财经</a></li>
+				<li><a href="#0" id="lives"><img src="../images/lives.svg">生活</a></li>
+				<li><a href="#0" id="physical"><img src="../images/physical.svg">体育</a></li>
+				<li><a href="#0" id="science"><img src="../images/science.svg">科技</a></li>
+				<li><a href="#0" id="enjoy"><img src="../images/enjoy.svg">娱乐</a></li>
 			</ul>
 		</div>
 		<div class="col-sm-10" id="tmp"></div>
 		<input type="hidden" id="history_back" />
 	</div>
 
-    <button class="btn btn-primary goto-top" title="返回顶部" id="js-goto-top">
-        <i class="glyphicon glyphicon-arrow-up"></i>
-    </button>
+	<button class="btn btn-primary goto-top" title="返回顶部" id="js-goto-top">
+		<i class="glyphicon glyphicon-arrow-up"></i>
+	</button>
 
 </body>
 
@@ -84,13 +87,16 @@ function loadData(type,labelId,labelName,num,isAdd){
 			var vals="";
 			for(var i=0;i<data.length;i++){
 				//console.log(date('Y-m-d H:i:s')-data[i].news_time);
-				console.log(data[i].news_time);
-				if(data[i].news_img_num==0){
-					vals+=loadDataNoPic(data[i]);
-				}else if(data[i].news_img_num==1){
-					vals+=loadDataOnePic(data[i]);
-				}else{
-					vals+=loadDataThreePic(data[i]);
+				console.log(data[i]);
+				if(data[i].news_imgs.length==0){
+					vals+=loadDataNoPic(data[i],labelId);
+				}else {
+					var len=data[i].news_imgs.split(";").length;
+					if(len==1){
+						vals+=loadDataOnePic(data[i],labelId);
+					}else{
+						vals+=loadDataThreePic(data[i],labelId);
+					}	
 				}
 			}
 			if(!isAdd)$("#tmp").html(vals);
@@ -110,113 +116,182 @@ $("#recomm").on('click', function(event){
 	//alert("df");
 	$("#recomm").addClass("bg-click");
 	$("#hot").removeClass("bg-click");
+	$("#home").removeClass("bg-click");
+	$("#innel").removeClass("bg-click");
+	$("#social").removeClass("bg-click");
+	$("#money").removeClass("bg-click");
+	$("#lives").removeClass("bg-click");
+	$("#physical").removeClass("bg-click");
 	$("#science").removeClass("bg-click");
 	$("#enjoy").removeClass("bg-click");
-	$("#money").removeClass("bg-click");
-	$("#car").removeClass("bg-click");
-	$("#physical").removeClass("bg-click");
 
-	loadData("getRecommendNews",0,"recom",15,0);
+	loadData("getRecommendNews",9,"recom",10,0);
 });
-
-$("#science").on('click', function(event){
-	$("#science").addClass("bg-click");
-	$("#hot").removeClass("bg-click");
-	$("#recomm").removeClass("bg-click");
-	$("#enjoy").removeClass("bg-click");
-	$("#money").removeClass("bg-click");
-	$("#car").removeClass("bg-click");
-	$("#physical").removeClass("bg-click");
-
-	loadData("getNewsByLabel",1,"sc",15,0);
-});
-
 
 $("#hot").on('click', function(event){
 	$("#hot").addClass("bg-click");
 	$("#recomm").removeClass("bg-click");
+	$("#home").removeClass("bg-click");
+	$("#innel").removeClass("bg-click");
+	$("#social").removeClass("bg-click");
+	$("#money").removeClass("bg-click");
+	$("#lives").removeClass("bg-click");
+	$("#physical").removeClass("bg-click");
 	$("#science").removeClass("bg-click");
 	$("#enjoy").removeClass("bg-click");
-	$("#money").removeClass("bg-click");
-	$("#car").removeClass("bg-click");
-	$("#physical").removeClass("bg-click");
-
-	loadData("getNewsByLabel",2,"hot",15,0);
+	loadData("getNewsByLabel",0,"hot",10,0);
 });
 
-$("#enjoy").on('click', function(event){
-	$("#enjoy").addClass("bg-click");
+$("#home").on('click', function(event){
+	$("#home").addClass("bg-click");
 	$("#hot").removeClass("bg-click");
+	$("#recomm").removeClass("bg-click");
+	$("#innel").removeClass("bg-click");
+	$("#social").removeClass("bg-click");
+	$("#money").removeClass("bg-click");
+	$("#lives").removeClass("bg-click");
+	$("#physical").removeClass("bg-click");
 	$("#science").removeClass("bg-click");
+	$("#enjoy").removeClass("bg-click");
+
+	loadData("getNewsByLabel",1,"hm",10,0);
+});
+
+$("#innel").on('click', function(event){
+	$("#innel").addClass("bg-click");
+	$("#hot").removeClass("bg-click");
+	$("#home").removeClass("bg-click");
+	$("#recomm").removeClass("bg-click");
+	$("#social").removeClass("bg-click");
+	$("#money").removeClass("bg-click");
+	$("#lives").removeClass("bg-click");
+	$("#physical").removeClass("bg-click");
+	$("#science").removeClass("bg-click");
+	$("#enjoy").removeClass("bg-click");
+
+	loadData("getNewsByLabel",2,"inel",10,0);
+});
+
+$("#social").on('click', function(event){
+	$("#social").addClass("bg-click");
+	$("#hot").removeClass("bg-click");
+	$("#home").removeClass("bg-click");
+	$("#innel").removeClass("bg-click");
 	$("#recomm").removeClass("bg-click");
 	$("#money").removeClass("bg-click");
-	$("#car").removeClass("bg-click");
+	$("#lives").removeClass("bg-click");
 	$("#physical").removeClass("bg-click");
+	$("#science").removeClass("bg-click");
+	$("#enjoy").removeClass("bg-click");
 
-	loadData("getNewsByLabel",3,"enjoy",15,0);
+	loadData("getNewsByLabel",3,"scl",10,0);
 });
 
 $("#money").on('click', function(event){
 	$("#money").addClass("bg-click");
 	$("#hot").removeClass("bg-click");
+	$("#home").removeClass("bg-click");
+	$("#innel").removeClass("bg-click");
+	$("#social").removeClass("bg-click");
+	$("#recomm").removeClass("bg-click");
+	$("#lives").removeClass("bg-click");
+	$("#physical").removeClass("bg-click");
 	$("#science").removeClass("bg-click");
 	$("#enjoy").removeClass("bg-click");
-	$("#recomm").removeClass("bg-click");
-	$("#car").removeClass("bg-click");
-	$("#physical").removeClass("bg-click");
 
-	loadData("getNewsByLabel",4,"money",15,0);
+	loadData("getNewsByLabel",4,"my",10,0);
 });
 
-$("#car").on('click', function(event){
-	$("#car").addClass("bg-click");
+$("#lives").on('click', function(event){
+	$("#lives").addClass("bg-click");
 	$("#hot").removeClass("bg-click");
-	$("#science").removeClass("bg-click");
-	$("#enjoy").removeClass("bg-click");
+	$("#home").removeClass("bg-click");
+	$("#innel").removeClass("bg-click");
+	$("#social").removeClass("bg-click");
 	$("#money").removeClass("bg-click");
 	$("#recomm").removeClass("bg-click");
 	$("#physical").removeClass("bg-click");
+	$("#science").removeClass("bg-click");
+	$("#enjoy").removeClass("bg-click");
 
-	loadData("getNewsByLabel",5,"car",15,0);
+	loadData("getNewsByLabel",5,"lv",10,0);
 });
 
 $("#physical").on('click', function(event){
 	$("#physical").addClass("bg-click");
 	$("#hot").removeClass("bg-click");
+	$("#home").removeClass("bg-click");
+	$("#innel").removeClass("bg-click");
+	$("#social").removeClass("bg-click");
+	$("#money").removeClass("bg-click");
+	$("#lives").removeClass("bg-click");
+	$("#recomm").removeClass("bg-click");
 	$("#science").removeClass("bg-click");
 	$("#enjoy").removeClass("bg-click");
-	$("#money").removeClass("bg-click");
-	$("#car").removeClass("bg-click");
-	$("#recomm").removeClass("bg-click");
 
-	loadData("getNewsByLabel",6,"phy",15,0);
+	loadData("getNewsByLabel",6,"phy",10,0);
 });
 
+$("#enjoy").on('click', function(event){
+	$("#enjoy").addClass("bg-click");
+	$("#hot").removeClass("bg-click");
+	$("#home").removeClass("bg-click");
+	$("#innel").removeClass("bg-click");
+	$("#social").removeClass("bg-click");
+	$("#money").removeClass("bg-click");
+	$("#lives").removeClass("bg-click");
+	$("#physical").removeClass("bg-click");
+	$("#science").removeClass("bg-click");
+	$("#recomm").removeClass("bg-click");
 
-function loadDataNoPic(data){
-	return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
-			"<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
+	loadData("getNewsByLabel",7,"ej",10,0);
+});
+$("#science").on('click', function(event){
+	$("#science").addClass("bg-click");
+	$("#hot").removeClass("bg-click");
+	$("#home").removeClass("bg-click");
+	$("#innel").removeClass("bg-click");
+	$("#social").removeClass("bg-click");
+	$("#money").removeClass("bg-click");
+	$("#lives").removeClass("bg-click");
+	$("#physical").removeClass("bg-click");
+	$("#recomm").removeClass("bg-click");
+	$("#enjoy").removeClass("bg-click");
+
+	loadData("getNewsByLabel",8,"sc",10,0);
+});
+
+// function hiddenSubmit(){
+// 	$('#hiddenVal').submit();
+// }
+
+function loadDataNoPic(data,labelId){
+	//var link="newsDetail.php?news_id="+news_id+"&news_title="+data.news_title+"&news_time="+data.news_time+"&news_data="+data.news_data+"&label_type="+labelId+"&agency_name="+data.agency_name+"";
+	//var data=data.news_id+"&"+data.news_title+"&"+data.news_time+"&"+data.news_data+"&"+labelId+"&"+data.agency_name;
+	var link="newsDetail.php?news_id="+data.news_id+"&label_type="+labelId;
+	return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='"+link+"'>"+data.news_title+"</a></div><div class='abstract'>"+
+			"<a target='_blank' href='"+link+"'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
 			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
 }
 
-function loadDataOnePic(data){
-	return "<div class='clearfix news-item '><div class='pull-left'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'><img class='feedimg' src='"+data.news_imgs+"' alt='图片'>" +
+function loadDataOnePic(data,labelId){
+	return "<div class='clearfix news-item '><div class='pull-left'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'><img class='feedimg' src='"+data.news_data.split(";")[1]+"' alt='图片'>" +
 			"</a></div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
 			"<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
 			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
 }
-function loadDataThreePic(data){
-	var imgs = data.news_imgs.split(';');
+function loadDataThreePic(data,labelId){
+	var imgs = data.news_data.split(';');
 	return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='image-list clearfix'>"+
 					"<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
-						"<div class='night-image'"+
-							"style='background-image: url("+imgs[0]+")'></div>"+
-					"</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
 						"<div class='night-image'"+
 							"style='background-image: url("+imgs[1]+")'></div>"+
 					"</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
 						"<div class='night-image'"+
 							"style='background-image: url("+imgs[2]+")'></div>"+
+					"</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
+						"<div class='night-image'"+
+							"style='background-image: url("+imgs[3]+")'></div>"+
 					"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
 			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
 }

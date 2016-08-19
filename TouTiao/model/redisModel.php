@@ -1,5 +1,4 @@
 <?php
-require_once "abstractModel.php";
 class RedisModel extends AbstractModel{
 	private $redis;
 	
@@ -11,12 +10,16 @@ class RedisModel extends AbstractModel{
 		//writeData("$newsContentOutTime $scanOutTime $userRecomm $tempOutTime $searchOutTime $newsOutTime $userStorageOutTime $userInfoOutTime");
 	}
 	
+	function __destruct(){
+		$this->redis->close();
+	}
 // 	function pingRedis(){
 // 		if("+PONG"==$this->redis->ping()) return 1;
 // 		return 0;
 // 	}
 	
 	function getUserById($userId) {
+		writeData("userID:".$userId);
 		$result = $this->redis->hGetAll ( "user:" . $userId );
 		if (! $result) {
 			// redis不存在个人信息，从数据库中加载
@@ -86,7 +89,7 @@ class RedisModel extends AbstractModel{
 			$this->redis->hGetAll ( "news:" . $newsId );
 		}
 		$newss = $this->redis->exec ();
-		writeData($newss);
+		//writeData($newss);
 		// print_r($newss);
 		$counts = count ( $newss );
 		for($i = 0; $i < $counts; $i ++) {
@@ -225,8 +228,10 @@ class RedisModel extends AbstractModel{
 				// ip对应的用户不存在，插入临时用户
 				$userId = $this->dao->addUser ( $current_cookie );
 				$_SESSION ["userId"] = $userId;
+				$_SESSION ["login"] = 0;
 				setcookie("PHPSESSID",$current_cookie,time()+cookieTime);
-				return $this->getNewsByLabel ( 100, $num, "def",$userId);
+				setcookie ( "userId", string2secret ( $userId ) ,time()+cookieTime);
+				return $this->getNewsByLabel ( 0, $num, "hot",$userId);
 			//}
 			// writeData("userId:".$userId);
 			// 从标签表中拉取数据,无登陆的用户对应的新闻标签类是100，名字为default
@@ -280,7 +285,7 @@ class RedisModel extends AbstractModel{
 			if (! $result) {
 				// 推荐表中无数据。。。从标签表中拉取
 				//writeData ("nothing...");
-				return $this->getNewsByLabel ( 100, $num, "def",$userId);
+				return $this->getNewsByLabel ( 0, $num, "hot",$userId);
 			//	return 0;
 			}
 			// 将取出的数据转化为set与浏览表求交集，查看是否该新闻已显示
@@ -322,7 +327,7 @@ class RedisModel extends AbstractModel{
 // 		}
 		$markNewData = $this->redis->get ( $labelName . $userId.":u" );
 		// var_dump($markNewData);
-		//writeData("nologinmarkNewData:".$markNewData."  ");
+		writeData("nologinmarkNewData:".$markNewData."  ");
 		// 判断是否有新数据 或者是一个新申请的帐号
 		if ($markNewData || !$this->redis->exists($labelName . $userId.":u")) {
 			//writeData(" have new data..");
@@ -400,23 +405,63 @@ class RedisModel extends AbstractModel{
 	function getDetailNews($news_id,$userId){
 		//writeData("news_id:".$news_id."  userId:".$userId);
 		//获取新闻信息
-		$news=$this->redis->hGetAll("news:".$news_id);
-		if(!$news){
-			$news = $this->dao->getDetailNews ( $news_id );
-			$this->redis->hMset ( "news:" . $news ["news_id"], $news );
-			$this->redis->expire ( "news:" . $news ["news_id"], newsOutTime );
-		}
+ 		$news=$this->redis->hGetAll("news:".$news_id);
+ 		if(!$news){
+ 			$news = $this->dao->getDetailNews ( $news_id );
+ 			$this->redis->hMset ( "news:" . $news ["news_id"], $news );
+ 			$this->redis->expire ( "news:" . $news ["news_id"], newsOutTime );
+ 		}
 		//print_r($news);
-		$newsData=$this->redis->get("nd:".$news_id);
+		//$newsData=$this->redis->get("nd:".$news_id);
 		
-		if(!$newsData){
-			$newsData=file_get_contents_utf8($news["news_data"]);
-			$this->redis->set("nd:".$news_id,$newsData);
-			$this->redis->expire ( "nd:" . $news ["news_id"], newsContentOutTime );
-		}
-		$news["news_data"]=$newsData;
+// 		if(!$newsData){
+// 			$newsData=file_get_contents_utf8($news["news_data"]);
+// 			$this->redis->set("nd:".$news_id,$newsData);
+// 			$this->redis->expire ( "nd:" . $news ["news_id"], newsContentOutTime );
+// 		}
+// 		$news["news_data"]=$newsData;
 		//echo "<br>";
 		//print_r($news);
+		
+		//判断用户是否收藏，是否点赞
+		//$news=array();
+		if($_SESSION["login"]){
+			if(!$this->redis->exists("ustore:" . $userId)){
+				$userStorage = $this->dao->getStorageByUserId ( $userId,0, 0 );
+				$redisVal='';
+				if ($userStorage) {
+					$find1 = ";";
+					$replace = ",";
+					$userStorage=substr($userStorage, 1);
+					$userStorage = str_replace ( $find1, $replace, $userStorage );
+					$redisVal = "\$this->redis->zAdd('ustore:" . $userId . "'," . $userStorage . ");";
+				}
+				
+				$userLikeNews=$this->dao->getUserLikeNews ( $userId,0,0);
+				if($userLikeNews){
+					$userLikeNews=substr($userLikeNews, 1);
+					if(strlen($redisVal)){
+						$redisVal =$redisVal. ";\$this->redis->sAdd('userr:" . $userId . "'," . $userLikeNews . ");";
+					}else{
+						$redisVal ="\$this->redis->sAdd('userr:" . $userId . "'," . $userLikeNews . ");";
+					}
+					
+				}
+				$this->redis->pipeline ();
+				eval ( $redisVal );
+				$this->redis->expire ( "ustore:" . $userId, userStorageOutTime );
+				$this->redis->expire ( "userr:" . $userId, userStorageOutTime );
+				$this->redis->exec();
+			}
+			
+			$news["isStorage"]=$this->redis->zRank("ustore:" . $userId,$news_id);
+			$news["isRecomm"]=$this->redis->sismember("userr:" . $userId,$news_id);
+			
+		}else{
+			$news["isStorage"]=0;
+			$news["isRecomm"]=0;
+		}
+		
 		//写入点击事件
 		$this->redis->pipeline();
 		$this->redis->sAdd("uc:".$userId,$news_id);
@@ -428,6 +473,32 @@ class RedisModel extends AbstractModel{
 		return $news;
 	} 
 
+	function recommendNews($news_id, $userId) {
+		// 写入推荐事件
+		$result = $this->dao->recommendNews ( $news_id, $userId );
+		$this->redis->sAdd("userr:" . $userId,$news_id);
+		// 更改新闻推荐个数
+		//$this->dao->addOneRecommendNum ( $news_id, 1 );
+		return $result;
+	}
+	function storageNews($news_id, $userId) {
+		// 写入收藏事件
+		//writeData($news_id);
+		//writeData($userId);
+		$this->redis->zAdd("ustore:" . $userId,time(),$news_id);
+		return $this->dao->storageNews ( $news_id, $userId );
+	}
+	function removeStorage($news_id,$userId) {
+		$this->redis->zRem("ustore:" . $userId,$news_id);
+		return $this->dao->removeStorage ( $news_id, $userId );
+	}
+	function removeRecomm($news_id, $userId) {
+		$result = $this->dao->removeRecomm ( $news_id, $userId );
+		$this->redis->srem("userr:" . $userId,$news_id);
+		// 更改新闻推荐个数
+		//$this->dao->addOneRecommendNum ( $news_id, - 1 );
+		return $result;
+	}
 }
 
 ?> 

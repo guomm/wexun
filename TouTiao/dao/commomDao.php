@@ -60,6 +60,8 @@ class CommonDao extends AbstractDao {
 			return $res->fetch_all ( MYSQLI_ASSOC );
 		return 0;
 	}
+	
+	function getUserLikeNews($userId, $num, $offset){}
 }
 
 ?> 

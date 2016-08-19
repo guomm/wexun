@@ -1,6 +1,10 @@
 <?php
-require_once 'common.php';
-$xml = simplexml_load_string(file_get_contents("configure.xml"));
+$configure=file_get_contents("configure.xml");
+if(!$configure){
+	$configure=file_get_contents("../configure.xml");
+}
+$xml = simplexml_load_string($configure);
+
 define("sessionTime",(int)$xml->sessionTime);
 define("cookieTime",(int)$xml->cookieData->cookieTime);
 

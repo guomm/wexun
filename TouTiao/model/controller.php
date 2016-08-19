@@ -1,6 +1,7 @@
 <?php
-require_once  'redisFactory.php';
+require_once  'model/redisFactory.php';
 require_once 'dao/redisDao.php';
+require_once 'model/redisModel.php';
 class Controller {
 	private $model;
 	private $userId;
