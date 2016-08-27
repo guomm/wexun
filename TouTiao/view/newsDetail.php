@@ -11,7 +11,7 @@
 <script src="../js/bootstrap.min.js"></script>
 <script src="../js/main.js"></script>
 <link rel="stylesheet" href="../css/share.min.css">
-<script type="text/javascript">
+<script type="text/javascript" charset="utf-8">
 
 <?php
 require_once '../model/common.php';
@@ -91,47 +91,39 @@ echo "var news_data_url='" . $data["news_data"]. "';\n";
 //$url='http://10.198.19.176:8080/v1/tfs/T16RdTByJT1RCvBVdK';
 //writeData($url);
 ?>
-
-
-
-// $.ajax({
-// 	url: "../room.php",  
-// 	data: {
-// 		'type':'getDetailNews',
-// 		'news_id':news_id
-// 	},
-// 	type:'post',
-// 	dataType:'json',
-// 	success: function(data){
-// 		console.log(data);
-// // 		var vals="<div class='detail_label'><a href='index.php'>首页</a>&nbsp;&nbsp;>&nbsp;&nbsp;"+getLabelByType(origin_label_type)+"&nbsp;&nbsp;>&nbsp;&nbsp;正文"+
-// // 					"<a href='#0' class='report' data-toggle='modal'data-target='#myModal'>举报</a></div>";
-// // 		vals+="<h2>"+data.news_title+"</h2>";
-// // 		vals+="<div class='agency'>"+data.agency_name+"&nbsp;&nbsp;&nbsp;&nbsp;"+data.news_time+"</div>";
-// // 		vals+=data.news_data;
-// 	//	$(".news_content").append(data);
-// 		if(data.isStorage>0){
-// 			$("#storage-img").attr("src","../images/storage.png");
-// 		}
-
-// 		if(data.isRecomm>0){
-// 			$("#reomm-img").attr("src","../images/good2.png");
-// 		}
-		
-// 	},  
-// 	error:function(data){
-// 		console.log(data);
-// 			//alert("加载失败，请稍候再试");
-// 	}
-		
-// });
-
+// var easyUTF8 = function(gbk){  
+//     if(!gbk){return '';}  
+//     var utf8 = [];  
+//     for(var i=0;i<gbk.length;i++){  
+//         var s_str = gbk.charAt(i);  
+//         if(!(/^%u/i.test(escape(s_str)))){utf8.push(s_str);continue;}  
+//         var s_char = gbk.charCodeAt(i);  
+//         var b_char = s_char.toString(2).split('');  
+//         var c_char = (b_char.length==15)?[0].concat(b_char):b_char;  
+//         var a_b =[];  
+//         a_b[0] = '1110'+c_char.splice(0,4).join('');  
+//         a_b[1] = '10'+c_char.splice(0,6).join('');  
+//         a_b[2] = '10'+c_char.splice(0,6).join('');  
+//         for(var n=0;n<a_b.length;n++){  
+//             utf8.push('%'+parseInt(a_b[n],2).toString(16).toUpperCase());  
+//         }  
+//     }  
+//     return utf8.join('');  
+// };  
 $.ajax({
 	url: news_data_url,  
+	//url:'http://10.198.19.176:8080/v1/tfs/T1AaETBKdQ1RCvBVdK'
 	type:'get',
-	dataType:'text',
+	dataType:'html',
+// 	headers:{
+// 		Accept: "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+// 	},
+	//contentType: "application/x-www-form-urlencoded; charset=utf-8", 
 	success: function(data){
 		console.log(data);
+		data=data.replace(/\">/g,"\"><br>");
+		//console.log("/\"\>/g","/><br>");
+		//console.log(encodeURI(data));
 // 		var vals="<div class='detail_label'><a href='index.php'>首页</a>&nbsp;&nbsp;>&nbsp;&nbsp;"+getLabelByType(origin_label_type)+"&nbsp;&nbsp;>&nbsp;&nbsp;正文"+
 // 					"<a href='#0' class='report' data-toggle='modal'data-target='#myModal'>举报</a></div>";
 // 		vals+="<h2>"+data.news_title+"</h2>";
@@ -139,8 +131,8 @@ $.ajax({
 // 		vals+=data.news_data;
 		$(".news_content").append(data);
 	},  
-	error:function(){
-			//alert("加载失败，请稍候再试");
+	error:function(data){
+		console.log(data);
 		$(".news_content").append("<span class='agency' >新闻内容加载失败...</span>");
 	}
 		

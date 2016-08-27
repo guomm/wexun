@@ -11,7 +11,7 @@ abstract class AbstractModel {
 			$_SESSION ["userId"] = $user_info->user_id ;
 			$_SESSION ["login"] = 1;
 			setcookie ( "userId", string2secret ( $user_info->user_id ) ,time()+cookieTime);
-			setcookie("PHPSESSID",session_id(),time()+cookieTime);
+			//setcookie("PHPSESSID",session_id(),time()+cookieTime);
 			setcookie ( "userName", $user_info->user_name ,time()+cookieTime);
 			setcookie ( "userAccount", string2secret ($userAccount),time()+cookieTime );
 			if (count ( $rememberMe )) {

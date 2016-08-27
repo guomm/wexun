@@ -61,10 +61,9 @@ class Controller {
 	
 	function getRecommendNews($num) {
 		
-		//$result= $this->model->getRecommendNews($num, $this->userId);
-		//writeData(json_encode($result));
-		echo json_encode($this->model->getRecommendNews($num, $this->userId));
-		
+		$result= $this->model->getRecommendNews($num, $this->userId);
+		if($result) echo json_encode($result);
+		else echo 0;
 	}
 	
 	function getNewsByLabel($labelId, $num, $labelName) {

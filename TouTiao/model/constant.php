@@ -33,4 +33,25 @@ define("searchOutTime",(int)$xml->redisData->redisOutTime->searchOutTime);
 
 //writeData(scanOutTime." ".tempOutTime." ".newsOutTime." ".userStorageOutTime." ".userInfoOutTime);
 
+//-------------------------------------------------------------------
+define("sessionTime",604800);
+define("cookieTime",604800);
+
+define("mysqlUrl","127.0.0.1:3307");
+define("mysqlUserName","root");
+define("mysqlPassword","wexun");
+define("mysqlDBName","wexun");
+
+define("redisIP","127.0.0.1");
+define("redisPort","6379");
+define("newsContentOutTime",7200);
+define("userRecomm",1200);
+
+define("scanOutTime",1200);
+define("tempOutTime",3);
+define("newsOutTime",7200);
+define("userStorageOutTime",600);
+define("userInfoOutTime",600);
+define("searchOutTime",600);
+
 ?>

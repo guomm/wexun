@@ -352,3 +352,10 @@ a:hover {
 	border-radius: 4px;
 	vertical-align: middle;
 }
+.report_item{
+	padding-top:5px;
+}
+
+.mark_report{
+	padding-top:25px;
+}

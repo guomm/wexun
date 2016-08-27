@@ -104,7 +104,8 @@ function loadData(type,labelId,labelName,num,isAdd){
 		},  
 		error:function(data){
 			console.log(data);
-				alert("加载失败，请稍候再试");
+			//if(data==0)alert();
+				//alert("加载失败，请稍候再试");
 		}
 			
 	});
@@ -265,36 +266,35 @@ $("#science").on('click', function(event){
 // 	$('#hiddenVal').submit();
 // }
 
-function loadDataNoPic(data,labelId){
-	//var link="newsDetail.php?news_id="+news_id+"&news_title="+data.news_title+"&news_time="+data.news_time+"&news_data="+data.news_data+"&label_type="+labelId+"&agency_name="+data.agency_name+"";
-	//var data=data.news_id+"&"+data.news_title+"&"+data.news_time+"&"+data.news_data+"&"+labelId+"&"+data.agency_name;
-	var link="newsDetail.php?news_id="+data.news_id+"&label_type="+labelId;
-	return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='"+link+"'>"+data.news_title+"</a></div><div class='abstract'>"+
-			"<a target='_blank' href='"+link+"'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
-			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
-}
 
-function loadDataOnePic(data,labelId){
-	return "<div class='clearfix news-item '><div class='pull-left'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'><img class='feedimg' src='"+data.news_data.split(";")[1]+"' alt='图片'>" +
-			"</a></div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
-			"<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
-			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
-}
-function loadDataThreePic(data,labelId){
-	var imgs = data.news_data.split(';');
-	return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='image-list clearfix'>"+
-					"<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
-						"<div class='night-image'"+
-							"style='background-image: url("+imgs[1]+")'></div>"+
-					"</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
-						"<div class='night-image'"+
-							"style='background-image: url("+imgs[2]+")'></div>"+
-					"</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
-						"<div class='night-image'"+
-							"style='background-image: url("+imgs[3]+")'></div>"+
-					"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
-			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
-}
+ function loadDataNoPic(data,labelId){
+     //var link="newsDetail.php?news_id="+news_id+"&news_title="+data.news_title+"&news_time="+data.news_time+"&news_data="+data.news_data+"&label_type="+labelId+"&agency_name="+data.agency_name+"";
+     //var data=data.news_id+"&"+data.news_title+"&"+data.news_time+"&"+data.news_data+"&"+labelId+"&"+data.agency_name;
+     var link="newsDetail.php?news_id="+data.news_id+"&label_type="+labelId;
+     return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='"+link+"'>"+data.news_title+"</a></div><div class='abstract'>"+
+             "<a target='_blank' href='"+link+"'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
+             " <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
+ }
+ 
+ function loadDataOnePic(data,labelId){
+     return "<div class='clearfix news-item '><div class='pull-left'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'><img class='feedimg' src='htpp://10.198.19.176:8080/v1/tfs/"+data.news_imgs+"' alt='图片'></img></a></div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
+             "<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot; <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
+ }
+ function loadDataThreePic(data,labelId){
+     var imgs = data.news_imgs.split(';');
+     return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='imag    e-list clearfix'>"+
+                     "<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
+                         "<div class='night-image'"+
+                             "style='background-image: url(htpp://10.198.19.176:8080/v1/tfs/"+imgs[0]+")'></div>"+
+                     "</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
+                         "<div class='night-image'"+
+                             "style='background-image: url(htpp://10.198.19.176:8080/v1/tfs/"+imgs[1]+")'></div>"+
+                     "</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
+                         "<div class='night-image'"+                             
+                         "style='background-image: url(htpp://10.198.19.176:8080/v1/tfs/"+imgs[2]+")'></div>"+
+                     "</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
+             " <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
+ }
 
 $(document).ready(function () {
 	$("#recomm").click();
@@ -321,26 +321,35 @@ $(window).scroll(function() {
 		//alert(currentType);
 		switch(currentType){
 		case 0:
-			loadData("getRecommendNews",0,"recom",10,1);
+			loadData("getNewsByLabel",0,"hot",10,1);
 			break;
 		case 1:
-			loadData("getNewsByLabel",1,"science",10,1);
+			loadData("getNewsByLabel",1,"hm",10,1);
 			break;
 		case 2:
-			loadData("getNewsByLabel",2,"hot",10,1);
+			loadData("getNewsByLabel",2,"inel",10,1);
 			break;
 		case 3:
-			loadData("getNewsByLabel",3,"enjoy",10,1);
+			loadData("getNewsByLabel",3,"scl",10,1);
 			break;
 		case 4:
-			loadData("getNewsByLabel",4,"money",10,1);
+			loadData("getNewsByLabel",4,"my",10,1);
 			break;
 		case 5:
-			loadData("getNewsByLabel",5,"car",10,1);
+			loadData("getNewsByLabel",5,"lv",10,1);
 			break;
 		case 6:
-			loadData("getNewsByLabel",6,"physical",10,1);
+			loadData("getNewsByLabel",6,"phy",10,1);
 			break;	
+		case 7:
+			loadData("getNewsByLabel",7,"ej",10,1);
+			break;
+		case 8:
+			loadData("getNewsByLabel",8,"sc",10,1);
+			break;
+		case 9:
+			loadData("getRecommendNews",9,"recom",10,1);
+			break;
 		}
 
 	setTimeout(setTure,500); mark = false; 

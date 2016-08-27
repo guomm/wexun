@@ -3,9 +3,10 @@
 // require_once 'model/constant.php';
 // require 'dao/abstractDao.php';
 //  require 'dao/redisDao.php';
-echo time();
-$a=" 456";
-echo $a+123;
+// echo time();
+// $a=" 456";
+// echo $a+123;
+json_encode(null);
 // $redisDao=new RedisDao();
 // $redisDao->test();
 // print_r($redisDao->getUserStorage(1,10,0)) ;

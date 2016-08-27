@@ -180,16 +180,48 @@ abstract class AbstractDao {
 	function getDetailNews($news_id) {
 		$sql = "select agency_name,news_time,news_title from news where news_id='" . $news_id . "' limit 1";
 		$res = $this->getConn()->query ( $sql );
-		if ($res)
+		if ($res->num_rows)
 			return $res->fetch_assoc ();
 		return 0;
 	}
 	
+	function getReportNewsTitle($offset,$num){
+		$sql = "select newsreportrecord.report_id,news.news_title,newsreportrecord.report_time from news,newsreportrecord where news.news_id=newsreportrecord.news_id and newsreportrecord.is_deal=0 order by report_time desc limit $offset,$num";
+		$res = $this->getConn()->query ( $sql );
+		if ($res->num_rows)
+			return $res->fetch_all ( MYSQLI_ASSOC );
+			return 0;
+	}
 	
+	function getReportNewsCount(){
+		$sql = "select count(*) as count from newsreportrecord  where is_deal=0";
+		$res = $this->getConn()->query ( $sql );
+		if ($res->num_rows)
+			return $res->fetch_assoc ()["count"];
+			return 0;
+	}
+	
+	function getReportDetailNews($report_id){
+		$sql = "select agency_name,news_time,news_title,report_describe,news_data from news,newsreportrecord where newsreportrecord.report_id=$report_id and newsreportrecord.news_id=news.news_id limit 1";
+		$res = $this->getConn()->query ( $sql );
+		if ($res->num_rows)
+			return $res->fetch_assoc ();
+			return 0;
+	}
+	
+	function dealReport ( $report_id ){
+		$res = $this->getConn()->query ( "update newsreportrecord set is_deal=1 where report_id=$report_id" );
+		if ($res) {
+			return 1;
+		}
+		return 0;
+	}
 	function __destruct() {
 		if($this->conn)
 		$this->conn->close ();
 	}
+	
+	
 	
 	abstract function getUserLikeNews($userId, $num, $offset);
 	abstract function getStorageByUserId($userId, $num, $offset);

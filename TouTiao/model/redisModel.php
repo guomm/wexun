@@ -210,7 +210,7 @@ class RedisModel extends AbstractModel{
 	}
 	
 	function getRecommendNews($num,$userId) {
-		//writeData("num:".$num." userID:".$userId);
+		writeData("num:".$num." userID:".$userId);
 		// 用户第一次加载主页
 		if (! $userId) {
 			//$current_ip = getIp ();
@@ -229,7 +229,7 @@ class RedisModel extends AbstractModel{
 				$userId = $this->dao->addUser ( $current_cookie );
 				$_SESSION ["userId"] = $userId;
 				$_SESSION ["login"] = 0;
-				setcookie("PHPSESSID",$current_cookie,time()+cookieTime);
+				//setcookie("PHPSESSID",$current_cookie,time()+cookieTime);
 				setcookie ( "userId", string2secret ( $userId ) ,time()+cookieTime);
 				return $this->getNewsByLabel ( 0, $num, "hot",$userId);
 			//}
@@ -333,14 +333,16 @@ class RedisModel extends AbstractModel{
 			//writeData(" have new data..");
 			// echo "have update data.<br>";
 			//第二个参数无用
-// 			$result = $this->dao->getNewsByLabel ( $labelId, 0,$markNewData );
-// 			$this->redis->pipeline ();
-// 			foreach ( $result as $newsId ) {
-// 				$this->redis->lPush ( $labelName . ":v", $newsId ["news_id"] );
-// 			}
+ 			$result = $this->dao->getNewsByLabel ( $labelId, 0,$markNewData );
+ 			//writeData($labelName);
+ 			$this->redis->pipeline ();
+ 			foreach ( $result as $newsId ) {
+ 				//writeData($newsId ["news_id"]);
+ 				$this->redis->lPush ( $labelName . ":v", $newsId ["news_id"] );
+ 			}
 			$offset = 0;
 			$this->redis->set ( $labelName .$userId. ":u", 0 );
-		//	$this->redis->exec ();
+			$this->redis->exec ();
 		}
 		
 		writeData("offset:".$offset." loadCount:".$loadCount." \n");
@@ -387,6 +389,7 @@ class RedisModel extends AbstractModel{
 			$count = $num - count ( $diffNewsIds );
 		}
 		$_SESSION ["$labelName"] = $offset;
+		if(!$diffNewsIds) return 0;
 		$this->redis->pipeline ();
 		// 将取出的新闻id放入浏览表中
 		foreach ( $diffNewsIds as $newsId ) {
@@ -483,8 +486,8 @@ class RedisModel extends AbstractModel{
 	}
 	function storageNews($news_id, $userId) {
 		// 写入收藏事件
-		//writeData($news_id);
-		//writeData($userId);
+		writeData($news_id);
+		writeData($userId);
 		$this->redis->zAdd("ustore:" . $userId,time(),$news_id);
 		return $this->dao->storageNews ( $news_id, $userId );
 	}

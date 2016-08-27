@@ -62,6 +62,7 @@ class CommonDao extends AbstractDao {
 	}
 	
 	function getUserLikeNews($userId, $num, $offset){}
+	function getStorageByUserId($userId, $num, $offset){}
 }
 
 ?> 

@@ -14,10 +14,8 @@
 </head>
 <body>
 	<div class="header-reg">
-		<div class="col-md-2 header-text-reg">
-			<a class="logo-link" href="/"> <img class="logo"
-				src="http://s3a.pstatp.com/toutiao/resource/toutiao_web/static/style/image/newindex/toutiaologo_7f2639e.png">
-			</a>
+		<div class="col-sm-2 header-text-reg">
+			<h1 class="logo">We讯</h1>
 		</div>
 		<div class="col-md-6 header-text-reg">
 			<label>注册界面</label>
