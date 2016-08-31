@@ -3,18 +3,19 @@
 <head>
 <meta charset="UTF-8">
 <title>头条</title>
-<link rel="stylesheet" type="text/css" href="../css/style.css" />
-<link rel="stylesheet" href="../css/bootstrap.min.css">
-<link rel="stylesheet" href="../css/common.css">
-<script type="text/javascript" src="../js/jquery.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/jquery.page.js"></script>
-<script src="../js/main.js"></script>
+<link rel="stylesheet" type="text/css" href="http://10.198.19.176:8080/TouTiao/css/style.css" />
+<link rel="stylesheet" href="http://10.198.19.176:8080/TouTiao/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://10.198.19.176:8080/TouTiao/css/common.css">
+<script type="text/javascript" src="http://10.198.19.176:8080/TouTiao/js/jquery.min.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/bootstrap.min.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/jquery.page.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/main.js"></script>
 </head>
 <body>
 <?php 
 	require_once '../model/common.php';
-	if(secret2string($_COOKIE['userAccount'])!="123")return;
+	require_once '../model/constant.php';
+	if(secret2string($_COOKIE['userAccount'])!=superUser)return;
 	 include("header.php")?>
 
     <div class="container" id="con">

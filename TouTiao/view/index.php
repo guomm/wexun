@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <title>头条</title>
-<link rel="stylesheet" type="text/css" href="../css/style.css" />
-<link rel="stylesheet" href="../css/bootstrap.min.css">
-<link rel="stylesheet" href="../css/common.css">
-<script type="text/javascript" src="../js/jquery.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
+<link rel="stylesheet" type="text/css" href="http://10.198.19.176:8080/TouTiao/css/style.css" />
+<link rel="stylesheet" href="http://10.198.19.176:8080/TouTiao/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://10.198.19.176:8080/TouTiao/css/common.css">
+<script type="text/javascript" src="http://10.198.19.176:8080/TouTiao/js/jquery.min.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/bootstrap.min.js"></script>
 
-<script src="../js/main.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/main.js"></script>
 
 </head>
 <body>
@@ -18,16 +18,16 @@
     <div class="container" id="con">
 		<div class="col-sm-2 text-center">
 			<ul class="list-unstyled category">
-				<li><a href="#0" id="recomm"><img src="../images/recomment.svg">推荐</a></li>
-				<li><a href="#0" id="hot"><img src="../images/hot.svg">热点</a></li>
-				<li><a href="#0" id="home"><img src="../images/home.svg">国内</a></li>
-				<li><a href="#0" id="innel"><img src="../images/international.svg">国际</a></li>
-				<li><a href="#0" id="social"><img src="../images/social.svg">社会</a></li>
-				<li><a href="#0" id="money"><img src="../images/money.svg">财经</a></li>
-				<li><a href="#0" id="lives"><img src="../images/lives.svg">生活</a></li>
-				<li><a href="#0" id="physical"><img src="../images/physical.svg">体育</a></li>
-				<li><a href="#0" id="science"><img src="../images/science.svg">科技</a></li>
-				<li><a href="#0" id="enjoy"><img src="../images/enjoy.svg">娱乐</a></li>
+				<li><a href="#0" id="recomm"><img src="http://10.198.19.176:8080/TouTiao/images/recomment.svg">推荐</a></li>
+				<li><a href="#0" id="hot"><img src="http://10.198.19.176:8080/TouTiao/images/hot.svg">热点</a></li>
+				<li><a href="#0" id="home"><img src="http://10.198.19.176:8080/TouTiao/images/home.svg">国内</a></li>
+				<li><a href="#0" id="innel"><img src="http://10.198.19.176:8080/TouTiao/images/international.svg">国际</a></li>
+				<li><a href="#0" id="social"><img src="http://10.198.19.176:8080/TouTiao/images/social.svg">社会</a></li>
+				<li><a href="#0" id="money"><img src="http://10.198.19.176:8080/TouTiao/images/money.svg">财经</a></li>
+				<li><a href="#0" id="lives"><img src="http://10.198.19.176:8080/TouTiao/images/lives.svg">生活</a></li>
+				<li><a href="#0" id="physical"><img src="http://10.198.19.176:8080/TouTiao/images/physical.svg">体育</a></li>
+				<li><a href="#0" id="science"><img src="http://10.198.19.176:8080/TouTiao/images/science.svg">科技</a></li>
+				<li><a href="#0" id="enjoy"><img src="http://10.198.19.176:8080/TouTiao/images/enjoy.svg">娱乐</a></li>
 			</ul>
 		</div>
 		<div class="col-sm-10" id="tmp"></div>
@@ -88,10 +88,11 @@ function loadData(type,labelId,labelName,num,isAdd){
 			for(var i=0;i<data.length;i++){
 				//console.log(date('Y-m-d H:i:s')-data[i].news_time);
 				console.log(data[i]);
+				if(Object.prototype.toString.call(data[i]) === '[object Array]')continue;
 				if(data[i].news_imgs.length==0){
 					vals+=loadDataNoPic(data[i],labelId);
 				}else {
-					var len=data[i].news_imgs.split(";").length;
+					var len=data[i].news_imgs.split(",").length;
 					if(len==1){
 						vals+=loadDataOnePic(data[i],labelId);
 					}else{
@@ -277,21 +278,21 @@ $("#science").on('click', function(event){
  }
  
  function loadDataOnePic(data,labelId){
-     return "<div class='clearfix news-item '><div class='pull-left'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'><img class='feedimg' src='htpp://10.198.19.176:8080/v1/tfs/"+data.news_imgs+"' alt='图片'></img></a></div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
+     return "<div class='clearfix news-item '><div class='pull-left'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'><img class='feedimg' src='http://10.198.19.176:8080/tfs/"+data.news_imgs+"' alt='图片'></img></a></div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
              "<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot; <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
  }
  function loadDataThreePic(data,labelId){
-     var imgs = data.news_imgs.split(';');
-     return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='imag    e-list clearfix'>"+
+     var imgs = data.news_imgs.split(',');
+     return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='image-list clearfix'>"+
                      "<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
                          "<div class='night-image'"+
-                             "style='background-image: url(htpp://10.198.19.176:8080/v1/tfs/"+imgs[0]+")'></div>"+
+                             "style='background-image: url(http://10.198.19.176:8080/tfs/"+imgs[0]+")'></div>"+
                      "</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
                          "<div class='night-image'"+
-                             "style='background-image: url(htpp://10.198.19.176:8080/v1/tfs/"+imgs[1]+")'></div>"+
+                             "style='background-image: url(http://10.198.19.176:8080/tfs/"+imgs[1]+")'></div>"+
                      "</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
                          "<div class='night-image'"+                             
-                         "style='background-image: url(htpp://10.198.19.176:8080/v1/tfs/"+imgs[2]+")'></div>"+
+                         "style='background-image: url(http://10.198.19.176:8080/tfs/"+imgs[2]+")'></div>"+
                      "</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
              " <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
  }

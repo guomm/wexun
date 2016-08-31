@@ -1,17 +1,19 @@
 <?php
 class RedisModel extends AbstractModel{
-	private $redis;
-	
+	private $readreadRedis;
+	private $writeRedis;
 	function __construct($dao,$ip,$port) {
 		parent::__construct($dao);
-		$this->redis = new Redis ();
-		$this->redis->connect ( redisIP, redisPort );
-		
+		$this->readRedis = new Redis ();
+		$this->writeRedis = new Redis ();
+		$this->readRedis->connect ( redisIP, redisPort );
+		$this->writeRedis->connect ( redisIP, redisPort );
 		//writeData("$newsContentOutTime $scanOutTime $userRecomm $tempOutTime $searchOutTime $newsOutTime $userStorageOutTime $userInfoOutTime");
 	}
 	
 	function __destruct(){
-		$this->redis->close();
+		$this->readRedis->close();
+		$this->writeRedis->close();
 	}
 // 	function pingRedis(){
 // 		if("+PONG"==$this->redis->ping()) return 1;
@@ -48,7 +50,6 @@ class RedisModel extends AbstractModel{
 	function getStorageById($userId, $num, $offset) {
 		$userStorageIds = $this->redis->zRange ( "ustore:" . $userId, $offset, $offset + $num - 1 );
 		if ($userStorageIds) {
-			writeData("userStorageIds:$userStorageIds");
 			// echo "have userStorageIds";
 			// 从redis中取出了收藏的新闻id，根据新闻Id获取新闻
 			return $this->getNewsByIds ( $userStorageIds );
@@ -58,15 +59,13 @@ class RedisModel extends AbstractModel{
 			// redis中不存在用户的收藏，从本地数据库中取出
 			$userStorage = $this->dao->getStorageByUserId ( $userId,$num, $offset );
 			// echo "dbustore:" . $userStorage . "<br>";
-			if(strlen($userStorage)==4)return 0;
-			else{
+			if ($userStorage) {
 				$find1 = ";";
 				$replace = ",";
 				// 将取出的数据放入redis,数据库中的数据存储格式为 storagetime,newsId;storagetime,newsId
 				// $userStorage
 				//去掉开始的；
-				$userStorage=substr($userStorage, 5);
-				if(!$userStorage)return 0;
+				$userStorage=substr($userStorage, 1);
 				$userStorage = str_replace ( $find1, $replace, $userStorage );
 				// echo "dbustore:".$userStorage."<br>";
 				$this->redis->pipeline ();
@@ -138,15 +137,13 @@ class RedisModel extends AbstractModel{
 		if (! $count) {
 			// redis中不存在用户的收藏，从本地数据库中取出,后面两个参数无用
 			$userStorage = $this->dao->getStorageByUserId ( $userId, 0, 0 );
-			if(strlen($userStorage)==4)return 0;
-			else{
+			if ($userStorage) {
 				$find1 = ";";
 				$replace = ",";
 				//echo userStorageOutTime . " dd";
 				//writeData($userStorage);
 				//去掉开始的；
-				$userStorage=substr($userStorage, 5);
-				//if(!$userStorage)return 0;
+				$userStorage=substr($userStorage, 1);
 				// 将取出的数据放入redis,数据库中的数据存储格式为 storagetime,newsId;storagetime,newsId
 				$userStorage = str_replace ( $find1, $replace, $userStorage );
 				
@@ -217,7 +214,7 @@ class RedisModel extends AbstractModel{
 	function getRecommendNews($num,$userId) {
 		writeData("num:".$num." userID:".$userId);
 		// 用户第一次加载主页
-		if (!$userId) {
+		if (! $userId) {
 			//$current_ip = getIp ();
 			$current_cookie = session_id();
 			 //writeData( "current_cookie".$current_cookie);
@@ -231,12 +228,10 @@ class RedisModel extends AbstractModel{
 // 				return $this->getRecommByUserId($userId,$num);
 // 			} else {
 				// ip对应的用户不存在，插入临时用户
-			$userId = $this->dao->addUser ( $current_cookie );
-			writeData("  ".$userId."   ");
+				$userId = $this->dao->addUser ( $current_cookie );
 				$_SESSION ["userId"] = $userId;
 				$_SESSION ["login"] = 0;
 				//setcookie("PHPSESSID",$current_cookie,time()+cookieTime);
-				writeData($_SESSION ["userId"]);
 				setcookie ( "userId", string2secret ( $userId ) ,time()+cookieTime);
 				return $this->getNewsByLabel ( 0, $num, "hot",$userId);
 			//}
@@ -270,7 +265,7 @@ class RedisModel extends AbstractModel{
 			//后两个参数无用
 			$result = $this->dao->getRecommendNews ( $userId,0,0);
 			writeData("have recommend data.");
-			//writeData($result);
+			writeData($result);
 			//print_r($result);
 			$this->redis->pipeline ();
 			$recommkey = "urec:" . $userId;
@@ -329,22 +324,22 @@ class RedisModel extends AbstractModel{
 			$offset = $_SESSION ["$labelName"];
 			$_SESSION ["$labelName"] = $_SESSION ["$labelName"] + $num;
 		}
-		//writeData($labelName);
 // 		if(!$this->redis->exists($labelName . $userId.":u")){
 			
 // 		}
 		$markNewData = $this->redis->get ( $labelName . $userId.":u" );
 		// var_dump($markNewData);
 		writeData("nologinmarkNewData:".$markNewData."  ");
-			writeData($labelName . ":v");
 		// 判断是否有新数据 或者是一个新申请的帐号
 		if ($markNewData || !$this->redis->exists($labelName . $userId.":u")) {
 			//writeData(" have new data..");
 			// echo "have update data.<br>";
 			//第二个参数无用
  			$result = $this->dao->getNewsByLabel ( $labelId, 0,$markNewData );
+ 			//writeData($labelName);
  			$this->redis->pipeline ();
  			foreach ( $result as $newsId ) {
+ 				//writeData($newsId ["news_id"]);
  				$this->redis->lPush ( $labelName . ":v", $newsId ["news_id"] );
  			}
 			$offset = 0;
@@ -354,19 +349,6 @@ class RedisModel extends AbstractModel{
 		
 		writeData("offset:".$offset." loadCount:".$loadCount." \n");
 		$result = $this->redis->lrange ( $labelName . ":v", $offset, $offset + $loadCount - 1 );
-	//````````````````````````````````````````````````````````````````````````````````````````````````
-	/*	$_SESSION ["$labelName"] = $offset+$loadCount - 1;
-		if(!$result) return 0;
-		$this->redis->pipeline ();
-		foreach ( $result as $newsId ) {
-				 $this->redis->sAdd ( "us:" . $userId, $newsId );
-	            $this->redis->sAdd ( "ns:" . $newsId, $userId );
-		}
-		$this->redis->exec ();
-        return $this->getNewsByIds ( $result );
-
-	 */
-		//``````````````````````````````````````````````````````````````````````````````````````````
 		// print_r($result);
 		// echo "<br>";
 		//writeData(var);
@@ -476,11 +458,8 @@ class RedisModel extends AbstractModel{
 				$this->redis->expire ( "userr:" . $userId, userStorageOutTime );
 				$this->redis->exec();
 			}
-			if($this->redis->zRank("ustore:" . $userId,$news_id)==''){
-				$news["isStorage"]=0;
-			}else{
-				$news["isStorage"]=1;
-			}
+			
+			$news["isStorage"]=$this->redis->zRank("ustore:" . $userId,$news_id);
 			$news["isRecomm"]=$this->redis->sismember("userr:" . $userId,$news_id);
 			
 		}else{
@@ -509,8 +488,8 @@ class RedisModel extends AbstractModel{
 	}
 	function storageNews($news_id, $userId) {
 		// 写入收藏事件
-		writeData("newsId:".$news_id);
-		writeData("userId:".$userId);
+		writeData($news_id);
+		writeData($userId);
 		$this->redis->zAdd("ustore:" . $userId,time(),$news_id);
 		return $this->dao->storageNews ( $news_id, $userId );
 	}

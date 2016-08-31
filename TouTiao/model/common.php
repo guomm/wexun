@@ -2,14 +2,16 @@
 
 
 function writeData($data) {
-	$file = fopen ( "D://tt.txt", "a" );
+	$file = fopen ( "/home/guomm/logforpn/testfile", "a" );
 	if(is_array($data)){
 		foreach ($data as $temp){
 			if(is_array($temp)){
-				foreach ($temp as $temp1)
-				fwrite ( $file, $temp1 );
+				foreach ($temp as $temp1){
+
+					fwrite ( $file, $temp1."," );
+				}
 			}else{
-				fwrite ( $file, $temp );
+				fwrite ( $file, $temp."," );
 			}
 		}
 		

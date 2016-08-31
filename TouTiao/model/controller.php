@@ -20,6 +20,7 @@ class Controller {
 		//$this->model=ModelFactory::singleton()->createModel($type);
 		//$factory=ModelFactory::singleton();
 		//$this->model=$factory->
+		writeData("userId:".$_SESSION ["userId"]);
 		if ($_SESSION ["userId"])
 			$this->userId = $_SESSION ["userId"];
 	}
@@ -63,7 +64,7 @@ class Controller {
 		
 		$result= $this->model->getRecommendNews($num, $this->userId);
 		if($result) echo json_encode($result);
-		else echo 0;
+				else echo 0;
 	}
 	
 	function getNewsByLabel($labelId, $num, $labelName) {

@@ -1,5 +1,5 @@
 <?php
-$configure=file_get_contents("configure.xml");
+/*$configure=file_get_contents("configure.xml");
 if(!$configure){
 	$configure=file_get_contents("../configure.xml");
 }
@@ -32,12 +32,12 @@ define("userInfoOutTime",(int)$xml->redisData->redisOutTime->userInfoOutTime);
 define("searchOutTime",(int)$xml->redisData->redisOutTime->searchOutTime);
 
 //writeData(scanOutTime." ".tempOutTime." ".newsOutTime." ".userStorageOutTime." ".userInfoOutTime);
-
+ */
 //-------------------------------------------------------------------
 define("sessionTime",604800);
 define("cookieTime",604800);
 
-define("mysqlUrl","127.0.0.1:3307");
+define("mysqlUrl","127.0.0.1:3306");
 define("mysqlUserName","root");
 define("mysqlPassword","wexun");
 define("mysqlDBName","wexun");
@@ -54,4 +54,5 @@ define("userStorageOutTime",600);
 define("userInfoOutTime",600);
 define("searchOutTime",600);
 
+define ("superUser",123);
 ?>

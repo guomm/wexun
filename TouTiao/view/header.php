@@ -30,6 +30,13 @@
 
                     <ul class="dropdown-menu" aria-labelledby="dLabel">
                         <li><a type="button" href="userInfo.php">个人中心</a></li>
+                        <?php 
+                       		require_once '../model/common.php';
+                       		require_once '../model/constant.php';
+                        	if(secret2string($_COOKIE['userAccount'])==superUser){
+                        		echo "<li><a type='button' href='reportPage.php' >举报管理</a></li>";
+                        	}
+                        ?>
                         <li><a type="button" href="" id='logout'>退出</a></li>
                     </ul>
                 </div>
@@ -59,7 +66,6 @@
 				<p class="fieldset">
 					<label class="image-replace cd-username" for="signin-username">用户名</label>
 					<?php 
-					require_once '../model/common.php';
 					if($_COOKIE['userAccount']){
 						echo "<input class='full-width has-padding has-border' id='user_name' name='user_name' type='text' value=".secret2string($_COOKIE['userAccount']).">";
 					}else{

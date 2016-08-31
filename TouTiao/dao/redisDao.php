@@ -20,9 +20,9 @@ class RedisDao extends AbstractDao {
 	}
 	
 	function getNewsByLabel($labelId,$offset, $num) {
-		$sql = "select news_id from newslabel where label_id='" . $labelId . "' order by add_news_time limit " . $num;
+		$sql = "select news_id from newslabel where label_id='" . $labelId . "' order by add_news_time limit 1000" ;
 		//echo $sql;
-		// writeData($sql);
+		 writeData($sql);
 		$res = $this->getConn()->query ( $sql );
 		if ($res && $res->num_rows)
 			return $res->fetch_all ( MYSQLI_ASSOC );

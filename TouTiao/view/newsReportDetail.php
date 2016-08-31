@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="description" content="We讯分享">
 <title>头条</title>
-<link rel="stylesheet" type="text/css" href="../css/style.css" />
-<link rel="stylesheet" href="../css/bootstrap.min.css">
-<link rel="stylesheet" href="../css/common.css">
-<script type="text/javascript" src="../js/jquery.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/main.js"></script>
-<link rel="stylesheet" href="../css/share.min.css">
+<link rel="stylesheet" type="text/css" href="http://10.198.19.176:8080/TouTiao/css/style.css" />
+<link rel="stylesheet" href="http://10.198.19.176:8080/TouTiao/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://10.198.19.176:8080/TouTiao/css/common.css">
+<script type="text/javascript" src="http://10.198.19.176:8080/TouTiao/js/jquery.min.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/bootstrap.min.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/main.js"></script>
+<link rel="stylesheet" href="http://10.198.19.176:8080/TouTiao/css/share.min.css">
 <script type="text/javascript" charset="utf-8">
 
 <?php
@@ -19,7 +19,7 @@ require_once '../model/constant.php';
 require_once '../dao/abstractDao.php';
 require_once '../dao/commomDao.php';
 
-if(secret2string($_COOKIE['userAccount'])!="123")return;
+if(secret2string($_COOKIE['userAccount'])!=superUser)return;
 $report_id = $_GET ["report_id"];
 // $userId=secret2string($_COOKIE["userId"]);
 $dao = new CommonDao ();
@@ -30,21 +30,21 @@ echo "var news_data_url='" . $data ["news_data"] . "';\n";
 // var_dump($data);
 ?>
 
-// $.ajax({
-// 	url: "",  
-// 	type:'get',
-// 	dataType:'html',
-// 	success: function(data){
+ $.ajax({
+	url: "http://10.198.19.176:8080/tfs/"+news_data_url,  
+ 	type:'get',
+ 	dataType:'text',
+ 	success: function(data){
 // 		console.log(data);
 // 		//data=data.replace(/\">/g,"\"><br>");
-// 		$(".news_content").append(data);
-// 	},  
-// 	error:function(data){
-// 		console.log(data);
-// 		$(".news_content").append("<span class='agency' >新闻内容加载失败...</span>");
-// 	}
+ 		$(".news_content").append(data);
+	},  
+ 	error:function(data){
+ 		console.log(data);
+ 		$(".news_content").append("<span class='agency' >新闻内容加载失败...</span>");
+ 	}
 		
-// });
+ });
 </script>
 </head>
 <body>
@@ -81,7 +81,7 @@ echo "var news_data_url='" . $data ["news_data"] . "';\n";
 		<div class='text-muted'>违法信息举报：12306</div>
 	</div>
 </body>
-<script src="../js/share.min.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/share.min.js"></script>
 <script type="text/javascript">
 
 	$("#right").bind('click', function(){

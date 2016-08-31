@@ -6,14 +6,14 @@
 
 <!-- <link rel="stylesheet" -->
 <!-- 	href="http://cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css"> -->
-<link rel="stylesheet"  href="../css/bootstrap.min.css" />	
-<script src="../js/jquery.min.js"></script>
-<script src="../js/jquery.validate.js"></script>
-<script src="../js/jquery.page.js"></script>
-<script src="../js/main.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="../css/common.css">
-<link rel="stylesheet"  href="../css/style.css" />
+<link rel="stylesheet"  href="http://10.198.19.176:8080/TouTiao/css/bootstrap.min.css" />	
+<script src="http://10.198.19.176:8080/TouTiao/js/jquery.min.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/jquery.validate.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/jquery.page.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/main.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/bootstrap.min.js"></script>
+<link rel="stylesheet" href="http://10.198.19.176:8080/TouTiao/css/common.css">
+<link rel="stylesheet"  href="http://10.198.19.176:8080/TouTiao/css/style.css" />
 
 </head>
 <body>
@@ -31,10 +31,10 @@
 		
 	</div>
 
-<link rel="stylesheet" href="../css/bootstrap-datetimepicker.css">
-<script src="../js/moment.min.js"></script>
-<script src="../js/bootstrap-datetimepicker.min.js"></script>
-<script src="../js/zh-cn.js"></script>
+<link rel="stylesheet" href="http://10.198.19.176:8080/TouTiao/css/bootstrap-datetimepicker.css">
+<script src="http://10.198.19.176:8080/TouTiao/js/moment.min.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/bootstrap-datetimepicker.min.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/zh-cn.js"></script>
 <script >
 $(document).ready(function () {
     $("#user_info").click();
@@ -42,7 +42,7 @@ $(document).ready(function () {
 
 $("#user_info").on('click', function(event){
 	<?php
-		echo "var account=" . secret2string($_COOKIE['userAccount']) . ";";
+		echo "var account='" . secret2string($_COOKIE['userAccount']) . "';";
 		echo "var isLogin='" . $_COOKIE ["userName"] . "';";
 	?>
 	$("#mystorage").removeClass("bg-click");
@@ -233,12 +233,13 @@ $("#mystorage").on('click', function(event){
 						var vals="";
 			 			for(var i=0;i<data.length;i++){
 			 				//console.log(date('Y-m-d H:i:s')-data[i].news_time);
-			 				//console.log(data[i].news_time);
+							//console.log(data[i].news_time);
+							if(Object.prototype.toString.call(data[i]) == '[object Array]')continue;
 			 				console.log(data[i]);
 								if(data[i].news_imgs==''||data[i].news_imgs.length==0){
 									vals+=loadDataNoPic(data[i]);
 								}else {
-									var len=data[i].news_imgs.split(";").length;
+									var len=data[i].news_imgs.split(",").length;
 									if(len==1){
 										vals+=loadDataOnePic(data[i]);
 									}else{
@@ -276,11 +277,12 @@ $("#mystorage").on('click', function(event){
  							var vals="";
  				 			for(var i=0;i<data.length;i++){
  				 				//console.log(date('Y-m-d H:i:s')-data[i].news_time);
- 				 				console.log(data[i]);
+								console.log(data[i]);
+								if(Object.prototype.toString.call(data[i]) == '[object Array]')continue;
  								if(data[i].news_imgs==''||data[i].news_imgs.length==0){
  									vals+=loadDataNoPic(data[i]);
  								}else {
- 									var len=data[i].news_imgs.split(";").length;
+ 									var len=data[i].news_imgs.split(",").length;
  									if(len==1){
  										vals+=loadDataOnePic(data[i]);
  									}else{
@@ -314,25 +316,27 @@ function loadDataNoPic(data){
 				" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
 	}
 
-function loadDataOnePic(data){
-    return "<div class='clearfix news-item '><div class='pull-left'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'><img class='feedimg' src='htpp://10.198.19.176:8080/v1/    tfs/"+data.news_imgs+"' alt='图片'>" +279             "</a></div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
-            "<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</    span> &middot;"+281             " <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
-}
-function loadDataThreePic(data){
-    var imgs = data.news_imgs.split(';');
-    return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='imag    e-list clearfix'>"+
-                    "<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
-                        "<div class='night-image'"+
-                            "style='background-image: url(htpp://10.198.19.176:8080/v1/tfs/"+imgs[0]+")'></div>"+
-                    "</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
-                        "<div class='night-image'"+
-                            "style='background-image: url(htpp://10.198.19.176:8080/v1/tfs/"+imgs[1]+")'></div>"+
-                    "</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
-                        "<div class='night-image'"+                             
-                        "style='background-image: url(htpp://10.198.19.176:8080/v1/tfs/"+imgs[2]+")'></div>"+
-                    "</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
-            " <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
-}
+	function loadDataOnePic(data){
+		return "<div class='clearfix news-item '><div class='pull-left'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'><img class='feedimg' src='http://10.198.19.176:8080/tfs/"+data.news_imgs+"' alt='图片'>" +
+				"</a></div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
+				"<a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
+				" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
+	}
+	function loadDataThreePic(data){
+		var imgs = data.news_imgs.split(',');
+		return "<div class='clearfix news-item '><div><div class='title_box'><a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='image-list clearfix'>"+
+						"<a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
+							"<div class='night-image'"+
+								"style='background-image: url(http://10.198.19.176:8080/tfs/"+imgs[0]+")'></div>"+
+						"</a> <a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
+							"<div class='night-image'"+
+								"style='background-image: url(http://10.198.19.176:8080/tfs/"+imgs[1]+")'></div>"+
+						"</a> <a href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
+							"<div class='night-image'"+
+								"style='background-image: url(http://10.198.19.176:8080/tfs/"+imgs[2]+")'></div>"+
+						"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
+				" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
+	}
 
 	function transferTime(time){
 		var returnVal;

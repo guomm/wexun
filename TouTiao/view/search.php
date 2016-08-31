@@ -3,13 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <title>头条</title>
-<link rel="stylesheet" type="text/css" href="../css/style.css" />
-<link rel="stylesheet" href="../css/bootstrap.min.css">
-<link rel="stylesheet" href="../css/common.css">
-<script type="text/javascript" src="../js/jquery.min.js"></script>
-<script src="../js/bootstrap.min.js"></script>
-<script src="../js/jquery.page.js"></script>
-<script src="../js/main.js"></script>
+<link rel="stylesheet" type="text/css" href="http://10.198.19.176:8080/TouTiao/css/style.css" />
+<link rel="stylesheet" href="http://10.198.19.176:8080/TouTiao/css/bootstrap.min.css">
+<link rel="stylesheet" href="http://10.198.19.176:8080/TouTiao/css/common.css">
+<script type="text/javascript" src="http://10.198.19.176:8080/TouTiao/js/jquery.min.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/bootstrap.min.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/jquery.page.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/main.js"></script>
 
 <script type="text/javascript">
 <?php 
@@ -60,7 +60,8 @@ $.ajax({
 					var vals="";
 		 			for(var i=0;i<data.length;i++){
 		 				//console.log(date('Y-m-d H:i:s')-data[i].news_time);
-		 				console.log(data[i]);
+						console.log(data[i]);
+						if(Object.prototype.toString.call(data[i]) == '[object Array]')continue;
 						if(data[i].news_imgs==''||data[i].news_imgs.length==0){
 							vals+=loadDataNoPic(data[i]);
 						}else {
@@ -107,16 +108,18 @@ $.ajax({
  							var vals="";
  				 			for(var i=0;i<data.length;i++){
  				 				//console.log(date('Y-m-d H:i:s')-data[i].news_time);
- 				 				if(data[i].news_imgs==''||data[i].news_imgs.length==0){
- 									vals+=loadDataNoPic(data[i]);
- 								}else {
- 									var len=data[i].news_imgs.split(",").length;
- 									if(len==1){
- 										vals+=loadDataOnePic(data[i]);
- 									}else{
- 										vals+=loadDataThreePic(data[i]);
- 									}	
- 								}
+								//console.log(data[i].news_time);
+								if(Object.prototype.toString.call(data[i]) == '[object Array]')continue;
+								if(data[i].news_imgs==''||data[i].news_imgs.length==0){
+									  vals+=loadDataNoPic(data[i]);
+								}else {
+									var len=data[i].news_imgs.split(",").length;
+									if(len==1){
+										vals+=loadDataOnePic(data[i]);
+									}else{
+										vals+=loadDataThreePic(data[i]);
+									}   
+					   			}
  				 			}
  				 			$(".content").html(vals);
  				 		//	$("#tmp").html(vals);
@@ -137,29 +140,32 @@ $.ajax({
 
 function loadDataNoPic(data){
 	return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
-			"<a target='_blank' target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
+			"<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
 			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
 }
 
 function loadDataOnePic(data){
-    return "<div class='clearfix news-item '><div class='pull-left'><a target='_blank' target='_blank' target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'><img class='feedimg' src='htpp://10.198.19.176:8080/v1/    tfs/"+data.news_imgs+"' alt='图片'>" +279             "</a></div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
-            "<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</    span> &middot;"+281             " <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
+	return "<div class='clearfix news-item '><div class='pull-left'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'><img class='feedimg' src='http://10.198.19.176:8080/tfs/"+data.news_imgs+"' alt='图片'>" +
+			"</a></div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='abstract'>"+
+			"<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_abstract+"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
+			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
 }
 function loadDataThreePic(data){
-    var imgs = data.news_imgs.split(';');
-    return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='imag    e-list clearfix'>"+
-                    "<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
-                        "<div class='night-image'"+
-                            "style='background-image: url(htpp://10.198.19.176:8080/v1/tfs/"+imgs[0]+")'></div>"+
-                    "</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
-                        "<div class='night-image'"+
-                            "style='background-image: url(htpp://10.198.19.176:8080/v1/tfs/"+imgs[1]+")'></div>"+
-                    "</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
-                        "<div class='night-image'"+                             
-                        "style='background-image: url(htpp://10.198.19.176:8080/v1/tfs/"+imgs[2]+")'></div>"+
-                    "</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
-            " <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
+	var imgs = data.news_imgs.split(',');
+	return "<div class='clearfix news-item '><div><div class='title_box'><a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+data.news_title+"</a></div><div class='image-list clearfix'>"+
+					"<a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
+						"<div class='night-image'"+
+							"style='background-image: url(http://10.198.19.176:8080/tfs/"+imgs[0]+")'></div>"+
+					"</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
+						"<div class='night-image'"+
+							"style='background-image: url(http://10.198.19.176:8080/tfs/"+imgs[1]+")'></div>"+
+					"</a> <a target='_blank' href='newsDetail.php?news_id="+data.news_id+"&label_type=0'>"+
+						"<div class='night-image'"+
+							"style='background-image: url(http://10.198.19.176:8080/tfs/"+imgs[2]+")'></div>"+
+					"</a></div><div class='timer small'><span  class='text-muted'>"+data.agency_name+"</span> &middot;"+
+			" <span class='text-muted'>"+transferTime(data.news_time)+"</span></div></div></div>";
 }
+
 
 </script>
 </head>

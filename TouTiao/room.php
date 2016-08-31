@@ -8,9 +8,21 @@ require_once 'model/abstractFactory.php';
 require_once ("model/controller.php");
 
 
-
+ini_set('session.save_handler', 'redis');
+ini_set('session.save_path', 'tcp://127.0.0.1:6379');
+//ini_set('session.gc_maxlifetime', sessionTime);
 session_start();
-ini_set('session.gc_maxlifetime', sessionTime);
+//ini_set('session.gc_maxlifetime', sessionTime);
+//ini_set('session.save_handler', 'redis');
+//ini_set('session.save_path', 'tcp://127.0.0.1:6379');
+
+//$redis = new Redis();
+//$redis->connect('127.0.0.1', 6379);
+//$_SESSION["test_session"]='dsda';
+//echo $_SESSION["test_session"];
+//echo session_id()."<br>";
+//echo "hh";
+//echo $redis->get( 'PHPREDIS_SESSION:'.session_id() );
 
 //writeData("sessionId:".session_id()." cookieId:".$_COOKIE["PHPSESSID"]);
 //$_SESSION["default"]=0;

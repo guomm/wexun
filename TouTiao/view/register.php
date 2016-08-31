@@ -5,16 +5,16 @@
 <title>头条</title>
 <!--<link rel="stylesheet" href="css/bootstrap.min.css">-->
 <link rel="stylesheet"
-	href="../css/bootstrap.min.css">
-<script src="../js/jquery.min.js"></script>
-<script src="../js/jquery.validate.js"></script>
-<script src="../js/register.js"></script>
-<link rel="stylesheet" href="../css/common.css">
-<!-- <link href="../css/index.css" rel="stylesheet"> -->
+	href="http://10.198.19.176:8080/TouTiao/css/bootstrap.min.css">
+<script src="http://10.198.19.176:8080/TouTiao/js/jquery.min.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/jquery.validate.js"></script>
+<script src="http://10.198.19.176:8080/TouTiao/js/register.js"></script>
+<link rel="stylesheet" href="http://10.198.19.176:8080/TouTiao/css/common.css">
+<!-- <link href="http://10.198.19.176:8080/TouTiao/css/index.css" rel="stylesheet"> -->
 </head>
 <body>
 	<div class="header-reg">
-		<div class="col-sm-2 header-text-reg">
+		<div class="col-md-2 header-text-reg">
 			<h1 class="logo">We讯</h1>
 		</div>
 		<div class="col-md-6 header-text-reg">
@@ -117,10 +117,10 @@
 	</div>
 
 
-	<link rel="stylesheet" href="../css/bootstrap-datetimepicker.css">
-	<script src="../js/moment.min.js"></script>
-	<script src="../js/bootstrap-datetimepicker.min.js"></script>
-	<script src="../js/zh-cn.js"></script>
+	<link rel="stylesheet" href="http://10.198.19.176:8080/TouTiao/css/bootstrap-datetimepicker.css">
+	<script src="http://10.198.19.176:8080/TouTiao/js/moment.min.js"></script>
+	<script src="http://10.198.19.176:8080/TouTiao/js/bootstrap-datetimepicker.min.js"></script>
+	<script src="http://10.198.19.176:8080/TouTiao/js/zh-cn.js"></script>
 	<script>
     $(document).ready(function () {
         $('#datetimepicker1').datetimepicker({

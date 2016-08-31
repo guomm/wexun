@@ -134,14 +134,19 @@ abstract class AbstractDao {
 		$newsS = $this->getConn()->query ( $sql );
 		if ($newsS->num_rows) {
 			$newsIds = $newsS->fetch_assoc () ["user_storage_news"];
+			//$newsIds=substr($newsIds,5);
 			$newsIds = explode ( ";", $newsIds );
 			$result = '';
 			foreach ( $newsIds as $temp ) {
 				if (explode ( ",", $temp ) [1] != $news_id)
 					$result = $result . $temp . ";";
 			}
-			if (strlen ( $result ))
-				$result = substr ( $result, 0, - 1 );
+			//if (strlen ( $result )){
+			//	$result =";1,1;". substr ( $result, 0, - 1 );
+			//}else{
+			//	$result = ";1,1";
+			//}
+			if(strlen($result))$result=substr($result,0,-1);
 			$sql = "update  userbehavior  set user_storage_news='" . $result . "' where user_id='" . $userId . "' ";
 			$newsS = $this->getConn()->query ( $sql );
 			if ($newsS)
